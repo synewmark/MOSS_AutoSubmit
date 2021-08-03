@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Test;
 public class Git_test {
 	@Test
 	public void testGitDownload() {
-		Git_downloader_svn.downloadGitRepo("https://github.com/google/gson/tree/master/lib", new File("\\test"));
-		assertEquals(new File("\\test").listFiles().length, 2);
-		cleanup(new File("\\test"));
+		File testDirectory = new File("\\test");
+		Git_downloader_svn.downloadGitRepo("https://github.com/google/gson/tree/master/lib", testDirectory);
+		assertEquals(testDirectory.listFiles().length, 2);
+		cleanup(testDirectory);
 	}
 	
 	public void cleanup(File file) {
