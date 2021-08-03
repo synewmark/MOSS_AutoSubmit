@@ -17,7 +17,7 @@ public class Git_test {
 	@Test
 	public void testGitDownloadBuilder() {
 		new Git_downloader_svn().setOutputFolder(testDirectory).
-		setDownloadSource("https://github.com/google/gson/tree/master/lib");
+		setDownloadSource("https://github.com/google/gson/tree/master/lib").execute();
 		assertEquals(testDirectory.listFiles().length, 3);
 		cleanup(testDirectory);
 	}
