@@ -11,14 +11,14 @@ public class Git_test {
 	@Test
 	public void testGitDownload() {
 		Git_downloader_svn.downloadGitRepo("https://github.com/google/gson/tree/master/lib", testDirectory);
-		assertEquals(testDirectory.listFiles().length, 3);
+		assertEquals(testDirectory.listFiles().length, 2);
 		cleanup(testDirectory);
 	}
 	@Test
 	public void testGitDownloadBuilder() {
 		new Git_downloader_svn().setOutputFolder(testDirectory).
 		setDownloadSource("https://github.com/google/gson/tree/master/lib").execute();
-		assertEquals(testDirectory.listFiles().length, 3);
+		assertEquals(testDirectory.listFiles().length, 2);
 		cleanup(testDirectory);
 	}
 	public void cleanup(File file) {

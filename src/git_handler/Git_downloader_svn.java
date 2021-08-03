@@ -13,7 +13,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 
 public class Git_downloader_svn {
-	
+	File directory;
 	SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
     SvnCheckout checkout = svnOperationFactory.createCheckout();
 	
@@ -32,12 +32,14 @@ public class Git_downloader_svn {
 	
 	public Git_downloader_svn setOutputFolder(File directory) {
 		checkout.setSingleTarget(SvnTarget.fromFile(directory));
+		this.directory = directory;
 		return this;
 	}
 	
 	public void execute() {
 		try {
 			checkout.run();
+			delete(new File(directory.toString()+File.separatorChar+".svn"));
 		} catch (SVNException e) {
 			e.printStackTrace();
 		}
@@ -50,6 +52,7 @@ public class Git_downloader_svn {
 		    checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(gitURLtoSVN(urlToDownload))));
 		    checkout.setSingleTarget(SvnTarget.fromFile(directory));
 		    checkout.run();
+		    delete(new File(directory.toString()+File.separatorChar+".svn"));
 		} catch (SVNException e) {
 			e.printStackTrace();
 		} finally {
@@ -66,6 +69,7 @@ public class Git_downloader_svn {
 		    checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(gitURLtoSVN(urlToDownload))));
 		    checkout.setSingleTarget(SvnTarget.fromFile(tempDirectory));
 		    checkout.run();
+		    delete(new File(tempDirectory.toString()+File.separatorChar+".svn"));
 		} catch (SVNException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -84,6 +88,7 @@ public class Git_downloader_svn {
 		    checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(gitURLtoSVN(urlToDownload))));
 		    checkout.setSingleTarget(SvnTarget.fromFile(directory));
 		    checkout.run();
+		    delete(new File(directory.toString()+File.separatorChar+".svn"));
 		} catch (SVNException e) {
 			e.printStackTrace();
 		} finally {
@@ -101,6 +106,7 @@ public class Git_downloader_svn {
 		    checkout.setSource(SvnTarget.fromURL(SVNURL.parseURIEncoded(gitURLtoSVN(urlToDownload))));
 		    checkout.setSingleTarget(SvnTarget.fromFile(tempDirectory));
 		    checkout.run();
+		    delete(new File(tempDirectory.toString()+File.separatorChar+".svn"));
 		} catch (SVNException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -113,5 +119,14 @@ public class Git_downloader_svn {
 	
 	private static String gitURLtoSVN(String url) {
 		return url.replaceFirst("tree/.*/", "trunk/");
+	}
+	
+	private static void delete(File file) {
+		if (file.isDirectory()) {
+			for (File f : file.listFiles()) {
+				delete(f);
+			}
+		}
+		file.delete();
 	}
 }
