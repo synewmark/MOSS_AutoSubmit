@@ -31,10 +31,6 @@ public class Git_downloader_svn {
 	}
 	
 	public Git_downloader_svn setOutputFolder(File directory) {
-		if (!directory.canWrite()) {
-			throw new IllegalArgumentException("Cannot write to "+directory.toString()+'\n'
-					+ "Make sure the directory exists and you have permission to access it");
-		}
 		checkout.setSingleTarget(SvnTarget.fromFile(directory));
 		return this;
 	}
@@ -116,6 +112,6 @@ public class Git_downloader_svn {
 	}
 	
 	private static String gitURLtoSVN(String url) {
-		return url.replaceFirst("tree/main", "trunk");
+		return url.replaceFirst("tree/.*/", "trunk/");
 	}
 }
