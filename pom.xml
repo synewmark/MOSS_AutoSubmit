@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>MOSS_AutoSubmit</groupId>
+  <artifactId>MOSS_AutoSubmit</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>it.zielke</groupId>
+  		<artifactId>moji</artifactId>
+  		<version>1.0.2</version>
+  	</dependency>
+  	<!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
+  	<dependency>
+  		<groupId>org.eclipse.jgit</groupId>
+  		<artifactId>org.eclipse.jgit</artifactId>
+  		<version>5.12.0.202106070339-r</version>
+  	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.tmatesoft.svnkit/svnkit -->
+	<dependency>
+	    <groupId>org.tmatesoft.svnkit</groupId>
+	    <artifactId>svnkit</artifactId>
+	    <version>1.10.3</version>
+	</dependency>
+	  	
+  	<dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.5.2</version>
+    </dependency>
+  </dependencies>
+</project>
