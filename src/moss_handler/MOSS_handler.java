@@ -14,11 +14,11 @@ import it.zielke.moji.MossException;
 import it.zielke.moji.SocketClient;
 
 public class MOSS_handler {
-	private static List<String> supportedLanguages = Collections.unmodifiableList(Arrays.asList("c", "cc", "java", "ml",
-			"pascal", "ada", "lisp", "schema", "haskell", "fortran", "ascii", "vhdl", "perl", "matlab", "python",
+	private static final List<String> supportedLanguages = Collections.unmodifiableList(Arrays.asList("c", "cc", "java",
+			"ml", "pascal", "ada", "lisp", "schema", "haskell", "fortran", "ascii", "vhdl", "perl", "matlab", "python",
 			"mips", "prolog", "spice", "vb", "csharp", "modula2", "a8086", "javascript", "plsql"));
-	private Collection<File> baseFiles = new ArrayList<>();
-	private Collection<File> submissionFiles = new ArrayList<>();
+	private final Collection<File> baseFiles = new ArrayList<>();
+	private final Collection<File> submissionFiles = new ArrayList<>();
 	private String language;
 	private long userId = -1;
 
@@ -59,13 +59,13 @@ public class MOSS_handler {
 
 	public URL execute() {
 		if (userId == -1) {
-			throw new IllegalStateException("User Id was not set!");
+			throw new IllegalStateException("UserID was not set!");
 		}
 		if (language == null) {
 			throw new IllegalStateException("Language was not set!");
 		}
 		if (submissionFiles == null || submissionFiles.isEmpty()) {
-			throw new IllegalStateException("Submission files not set or empty!");
+			throw new IllegalStateException("Submission files not set!");
 		}
 
 		SocketClient socketClient = new SocketClient();

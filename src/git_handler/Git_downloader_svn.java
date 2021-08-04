@@ -19,8 +19,8 @@ public class Git_downloader_svn {
 
 	public Git_downloader_svn setCredentials(char[] oauthToken) {
 		// despite potential appearances, SvnCheckout does remain linked to the relevant
-		// instance of SvnOperationFactory
-		// setAuthenticationManager can be called after createCheckout without issue
+		// instance of SvnOperationFactory so setAuthenticationManager can be called
+		// after createCheckout without issue
 		svnOperationFactory
 				.setAuthenticationManager(SVNWCUtil.createDefaultAuthenticationManager("${token}", oauthToken));
 		return this;
@@ -36,7 +36,8 @@ public class Git_downloader_svn {
 	}
 
 	public Git_downloader_svn setOutputFolder(File directory) {
-		if (!directory.mkdirs() || !directory.canWrite()) {
+		directory.mkdirs();
+		if (!directory.canWrite()) {
 			throw new IllegalArgumentException("Cannot write to " + directory);
 		}
 		checkout.setSingleTarget(SvnTarget.fromFile(directory));
@@ -47,9 +48,13 @@ public class Git_downloader_svn {
 	public void execute() {
 		try {
 			checkout.run();
+			// SVNKit auto creates a .svn folder within the directory which has to be
+			// deleted
+			// will look into possibility of preventing that folder from being downloaded in
+			// the first place
 			delete(new File(directory.toString() + File.separatorChar + ".svn"));
 		} catch (SVNException e) {
-			// TODO: instance check exceptions and rewrap solvable ones into other
+			// TODO: instance check exceptions and re-wrap solvable ones into other
 			// exceptions with more detailed error messages
 			e.printStackTrace();
 		}
@@ -89,7 +94,7 @@ public class Git_downloader_svn {
 
 	private static String gitURLtoSVN(String url) {
 		// pattern matches any substring starting with "tree/" until and including the
-		// next '/' and replaces it with "trunk"
+		// next '/' and replaces it with "trunk/"
 		// see
 		// https://stackoverflow.com/questions/7106012/download-a-single-folder-or-directory-from-a-github-repo
 		return url.replaceFirst("tree/.*/", "trunk/");
