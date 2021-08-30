@@ -11,10 +11,11 @@ public class moss_handler_tests {
 	@Test
 	public void testJavaNoBaseFiles() throws IOException {
 		createExampleFiles();
-		System.out.println(new MOSS_handler().setLanguage("java")
+		System.out.println(new MOSSHandler().setLanguage("java")
 				.addSubmissionFiles(Arrays.asList(new File(File.separator + "studentCode").listFiles()))
 				.setUserId(884640278).execute());
 		cleanup(new File(File.separator + "studentCode"));
+		System.out.println(new File(" "));
 	}
 
 	public void createExampleFiles() throws IOException {

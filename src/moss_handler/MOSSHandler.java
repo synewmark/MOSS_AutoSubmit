@@ -13,7 +13,7 @@ import java.util.List;
 import it.zielke.moji.MossException;
 import it.zielke.moji.SocketClient;
 
-public class MOSS_handler {
+public class MOSSHandler {
 	private static final List<String> supportedLanguages = Collections.unmodifiableList(Arrays.asList("c", "cc", "java",
 			"ml", "pascal", "ada", "lisp", "schema", "haskell", "fortran", "ascii", "vhdl", "perl", "matlab", "python",
 			"mips", "prolog", "spice", "vb", "csharp", "modula2", "a8086", "javascript", "plsql"));
@@ -22,7 +22,7 @@ public class MOSS_handler {
 	private String language;
 	private long userId = -1;
 
-	public MOSS_handler addSubmissionFiles(Collection<File> submissionFilesToBeAdded) {
+	public MOSSHandler addSubmissionFiles(Collection<File> submissionFilesToBeAdded) {
 		for (File file : submissionFilesToBeAdded) {
 			if (file.isDirectory()) {
 				addSubmissionFiles(Arrays.asList(file.listFiles()));
@@ -33,7 +33,17 @@ public class MOSS_handler {
 		return this;
 	}
 
-	public MOSS_handler addBaseFiles(Collection<File> baseFilesToBeAdded) {
+	public MOSSHandler addSubmissionFiles(File submissionFilesToBeAdded) {
+		addSubmissionFiles(Arrays.asList(submissionFilesToBeAdded.listFiles()));
+		return this;
+	}
+
+	public MOSSHandler addBaseFiles(File baseFilesToBeAdded) {
+		addSubmissionFiles(Arrays.asList(baseFilesToBeAdded.listFiles()));
+		return this;
+	}
+
+	public MOSSHandler addBaseFiles(Collection<File> baseFilesToBeAdded) {
 		for (File file : baseFilesToBeAdded) {
 			if (file.isDirectory()) {
 				addBaseFiles(Arrays.asList(file.listFiles()));
@@ -44,12 +54,12 @@ public class MOSS_handler {
 		return this;
 	}
 
-	public MOSS_handler setUserId(long userId) {
+	public MOSSHandler setUserId(long userId) {
 		this.userId = userId;
 		return this;
 	}
 
-	public MOSS_handler setLanguage(String language) {
+	public MOSSHandler setLanguage(String language) {
 		if (!supportedLanguages.contains(language.toLowerCase())) {
 			throw new IllegalArgumentException(language + " is not supported");
 		}
@@ -95,6 +105,10 @@ public class MOSS_handler {
 			e.printStackTrace();
 		}
 		return socketClient.getResultURL();
+	}
+
+	public static boolean checkLanguageSupported(String language) {
+		return supportedLanguages.contains(language.toLowerCase());
 	}
 
 	public static List<String> listOfSupportedLanguages() {
