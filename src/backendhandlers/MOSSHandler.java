@@ -1,4 +1,4 @@
-package moss_handler;
+package backendhandlers;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class MOSSHandler {
 		SocketClient socketClient = new SocketClient();
 
 		socketClient.setUserID(String.valueOf(userId));
-
+		URL returnUrl = null;
 		try {
 			socketClient.setLanguage(language);
 			socketClient.run();
@@ -96,15 +96,17 @@ public class MOSSHandler {
 			}
 
 			socketClient.sendQuery();
-
+			returnUrl = socketClient.getResultURL();
 		} catch (MossException e) {
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			socketClient.close();
 		}
-		return socketClient.getResultURL();
+		return returnUrl;
 	}
 
 	public static boolean checkLanguageSupported(String language) {
