@@ -24,7 +24,7 @@ import com.google.gson.JsonSyntaxException;
 import gitHandler.model.GitFileRepresentation;
 import gitHandler.model.URLbyComponents;
 
-public class GitHandlerAPI extends GitHandlerAbstract {
+public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 
 	private static Gson gson = new Gson();
 

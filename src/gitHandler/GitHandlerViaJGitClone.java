@@ -8,13 +8,13 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
-public class GitHandlerClone extends GitHandlerAbstract {
+public class GitHandlerViaJGitClone extends GitHandlerAbstract {
 
 	@Override
 	public void execute() throws IOException {
 		String hash = null;
 		if (this.dateToDownload != null) {
-			hash = GitHandlerAPI.getGitCommitForDate(urlToDownload, dateToDownload, oauthToken);
+			hash = GitDownloaderViaAPIRequests.getGitCommitForDate(urlToDownload, dateToDownload, oauthToken);
 		}
 		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
 				this.urlToDownload.getUsername() + '/' + this.urlToDownload.getRepoName());

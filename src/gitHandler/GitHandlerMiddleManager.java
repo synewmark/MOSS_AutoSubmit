@@ -12,10 +12,10 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 		GitHandlerAbstract gitDownload = getProperGitAbstractInstance();
 		passGitHandlerFieldsTo(gitDownload);
 		int currentRequestsRemaining = 0;
-		currentRequestsRemaining = GitHandlerAPI.getRateRemaing(oauthToken);
+		currentRequestsRemaining = GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
 		gitDownload.execute();
 		if (usingAPI) {
-			currentCost = currentRequestsRemaining - GitHandlerAPI.getRateRemaing(oauthToken);
+			currentCost = currentRequestsRemaining - GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
 		}
 
 	}
@@ -23,15 +23,15 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 	private GitHandlerAbstract getProperGitAbstractInstance() {
 		int rateRemaining = 0;
 		try {
-			rateRemaining = GitHandlerAPI.getRateRemaing(oauthToken);
+			rateRemaining = GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
 		} catch (IOException e) {
-			return new GitHandlerClone();
+			return new GitHandlerViaJGitClone();
 		}
 		if (explicitFilesToDownload != null && rateRemaining > 40 && rateRemaining * 2 > currentCost) {
 			usingAPI = true;
-			return new GitHandlerAPI();
+			return new GitDownloaderViaAPIRequests();
 		} else {
-			return new GitHandlerClone();
+			return new GitHandlerViaJGitClone();
 		}
 	}
 
