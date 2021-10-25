@@ -25,13 +25,13 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 		try {
 			rateRemaining = GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
 		} catch (IOException e) {
-			return new GitHandlerViaJGitClone();
+			return new GitDownloaderViaJGitClone();
 		}
 		if (explicitFilesToDownload != null && rateRemaining > 40 && rateRemaining * 2 > currentCost) {
 			usingAPI = true;
 			return new GitDownloaderViaAPIRequests();
 		} else {
-			return new GitHandlerViaJGitClone();
+			return new GitDownloaderViaJGitClone();
 		}
 	}
 

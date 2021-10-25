@@ -8,7 +8,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
-public class GitHandlerViaJGitClone extends GitHandlerAbstract {
+public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 
 	@Override
 	public void execute() throws IOException {
