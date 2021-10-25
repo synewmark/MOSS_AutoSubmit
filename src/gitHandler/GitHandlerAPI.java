@@ -24,45 +24,15 @@ import com.google.gson.JsonSyntaxException;
 import gitHandler.model.GitFileRepresentation;
 import gitHandler.model.URLbyComponents;
 
-public class GitHandler {
+public class GitHandlerAPI extends GitHandlerAbstract {
 
 	private static Gson gson = new Gson();
 
 	private Queue<GitFileRepresentation> trees = new ArrayDeque<>();
 	private Queue<GitFileRepresentation> files = new ArrayDeque<>();
 	private Queue<GitFileRepresentation> directory = new ArrayDeque<>();
-	private URLbyComponents urlToDownload;
-	private LocalDateTime dateToDownload;
-	private File directoryToDownloadTo;
-	private char[] oauthToken;
 
-	private Collection<String> explicitFilesToDownload;
-
-	public GitHandler setURL(URLbyComponents urlToDownload) {
-		this.urlToDownload = urlToDownload;
-		return this;
-	}
-
-	public GitHandler setDate(LocalDateTime dateToDownload) {
-		this.dateToDownload = dateToDownload;
-		return this;
-	}
-
-	public GitHandler setDir(File directoryToDownloadTo) {
-		this.directoryToDownloadTo = directoryToDownloadTo;
-		return this;
-	}
-
-	public GitHandler setCredentials(char[] oauthToken) {
-		this.oauthToken = oauthToken;
-		return this;
-	}
-
-	public GitHandler setFilesToDownload(Collection<String> explicitFilesToDownload) {
-		this.explicitFilesToDownload = explicitFilesToDownload;
-		return this;
-	}
-
+	@Override
 	public void execute() throws IOException {
 		if (urlToDownload == null) {
 			throw new IllegalArgumentException("URL must be set");
@@ -73,6 +43,9 @@ public class GitHandler {
 		if (dateToDownload == null) {
 			dateToDownload = LocalDateTime.now();
 		}
+		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
+				this.urlToDownload.getUsername() + '/' + this.urlToDownload.getRepoName());
+
 		if (explicitFilesToDownload != null) {
 			downloadGitWithDeclaredFiles(urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
 					explicitFilesToDownload);
@@ -173,7 +146,7 @@ public class GitHandler {
 		}
 	}
 
-	private static String getGitCommitForDate(URLbyComponents urlish, LocalDateTime date, char[] oauthToken)
+	protected static String getGitCommitForDate(URLbyComponents urlish, LocalDateTime date, char[] oauthToken)
 			throws IOException {
 		URL url = getGitHubURLForRootRequest(urlish, date);
 		String shaHash = null;
@@ -230,6 +203,11 @@ public class GitHandler {
 			// there should be a way to pass sensitive values as a bitstream which get
 			// consumed
 			http.addRequestProperty("Authorization", "token " + new String(oauthToken));
+		}
+		int responseCode = http.getResponseCode();
+		if (responseCode < 200 || responseCode >= 300) {
+			throw new IOException("Invalid reponse code from the server: " + responseCode + "\n With response message: "
+					+ http.getResponseMessage());
 		}
 		String string = new String(http.getInputStream().readAllBytes());
 		tokener = new JSONTokener(string);

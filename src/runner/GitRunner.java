@@ -13,7 +13,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import gitHandler.GitHandler;
+import gitHandler.GitHandlerAbstract;
+import gitHandler.GitHandlerMiddleManager;
 import gitHandler.model.URLbyComponents;
 
 public class GitRunner {
@@ -139,15 +140,13 @@ public class GitRunner {
 		for (String repo : listOfRepos) {
 			URLbyComponents url = null;
 			try {
-				System.out.println(host + username + '/' + repo + "tree/" + branch + '/' + subDirectory);
 				url = new URLbyComponents(host, username, repo, subDirectory, branch);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-			File directoryToDownloadTo = new File(directory, url.getPath());
-			System.out.println("Downloading files from: " + url + " to directory: " + directoryToDownloadTo);
+			System.out.println("Downloading files from: " + url + " to directory: " + directory);
 			try {
-				GitHandler gitHandler = new GitHandler().setURL(url).setDir(directoryToDownloadTo);
+				GitHandlerAbstract gitHandler = new GitHandlerMiddleManager().setURL(url).setDir(directory);
 				if (oauthToken.length != 0) {
 					gitHandler.setCredentials(oauthToken);
 				}
@@ -195,6 +194,7 @@ public class GitRunner {
 			case "-b":
 			case "-branch":
 				branch = params[++i];
+				break;
 
 			case "-o":
 			case "-oauth":
@@ -218,6 +218,9 @@ public class GitRunner {
 				throw new IllegalArgumentException(params[i] + " is not a valid flag");
 			}
 		}
+		if (host == null) {
+			host = "https://github.com/";
+		}
 
 		if (directoryToDownloadTo == null) {
 			try {
@@ -226,6 +229,9 @@ public class GitRunner {
 				throw new IllegalStateException(
 						"Cannot create temp directory for you, please specificy a valid directory and try again");
 			}
+		}
+		if (timestamp == null) {
+			timestamp = LocalDateTime.now();
 		}
 
 		return gitDownload(host, username, pathToRepoNameFile, path, branch, oauthToken, directoryToDownloadTo,
