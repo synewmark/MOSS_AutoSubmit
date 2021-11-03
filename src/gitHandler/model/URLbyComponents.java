@@ -16,13 +16,14 @@ public class URLbyComponents {
 	public URLbyComponents(String[] components) throws MalformedURLException {
 		if (components.length != 5) {
 			throw new IllegalArgumentException(
-					"Passed array must be comprised of a host, Username, RepoName, and path");
+					"Passed array must be comprised of a host, Username, RepoName, path, and branch");
 		}
 		host = components[0];
 		username = components[1];
 		repoName = components[2];
 		path = components[3];
 		branch = components[4];
+		ensureNoNullValues();
 		fullURL = initializeURL();
 		bareURL = initializeBareURL();
 	}
@@ -34,13 +35,14 @@ public class URLbyComponents {
 		this.repoName = repoName;
 		this.path = path;
 		this.branch = branch;
+		ensureNoNullValues();
 		this.fullURL = initializeURL();
 		this.bareURL = initializeBareURL();
 	}
 
 	private URL initializeURL() throws MalformedURLException {
 		try {
-			return new URL(host + username + '/' + repoName + "/tree/" + branch + '/' + path);
+			return new URL(host + username + '/' + repoName + "/tree/" + branch + '/' + path + '/');
 		} catch (MalformedURLException e) {
 			throw new MalformedURLException(
 					"host + username + '/' + repoName + tree/ + branch + '/' + path must be a valid URL");
@@ -54,6 +56,24 @@ public class URLbyComponents {
 			throw new MalformedURLException("host + username + '/' + repoName must be a valid URL");
 		}
 
+	}
+
+	private void ensureNoNullValues() {
+		if (host == null) {
+			throw new IllegalArgumentException("Host cannot be null");
+		}
+		if (username == null) {
+			throw new IllegalArgumentException("Username cannot be null");
+		}
+		if (repoName == null) {
+			throw new IllegalArgumentException("RepoName cannot be null");
+		}
+		if (path == null) {
+			throw new IllegalArgumentException("Path cannot be null");
+		}
+		if (branch == null) {
+			throw new IllegalArgumentException("Branch cannot be null");
+		}
 	}
 
 	public String getHost() {
