@@ -116,7 +116,7 @@ public class MOSSRunner {
 			case "-bfd":
 				baseFileDirectory = new File(params[++i]);
 				break;
-			case "i":
+			case "-i":
 			case "-id":
 				mossID = Long.parseLong(params[++i]);
 				break;

@@ -238,6 +238,7 @@ public class GitRunner {
 				break;
 
 			case "-u":
+			case "-user":
 			case "-username":
 				username = params[++i];
 				break;
