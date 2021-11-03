@@ -36,6 +36,15 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 
 		if (usingAPI) {
 			currentCost = currentRequestsRemaining - GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
+		} else if (!urlToDownload.getPath().equals("")) {
+			File dirToKeep = new File(directoryToDownloadTo, urlToDownload.getUsername() + File.separator
+					+ urlToDownload.getRepoName() + File.separator + urlToDownload.getPath());
+			FileFilter filter = (File file) -> !dirToKeep.equals(file);
+			System.out.println(dirToKeep);
+			deleteDirectoryExcludeExplicitFiles(new File(directoryToDownloadTo,
+					urlToDownload.getUsername() + File.separator + File.separator + urlToDownload.getRepoName()),
+					filter);
+
 		} else if (explicitFilesToDownload != null) {
 			Set<File> set = new HashSet<>((int) (explicitFilesToDownload.size() * 0.75) + 1);
 			for (String string : explicitFilesToDownload) {
