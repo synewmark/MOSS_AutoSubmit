@@ -87,9 +87,6 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 	}
 
 	private void downloadFromURL(URL urlToDownloadFrom, File fileToDownloadTo, int fileSize) throws IOException {
-		if (getRateRemaing(null) < 100) {
-			throw new IOException();
-		}
 		ReadableByteChannel readableByteChannel = Channels.newChannel(urlToDownloadFrom.openStream());
 		FileOutputStream fileOutputStream = new FileOutputStream(fileToDownloadTo);
 		fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, fileSize);
