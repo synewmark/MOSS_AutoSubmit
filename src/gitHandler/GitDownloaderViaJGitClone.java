@@ -20,9 +20,12 @@ public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 		}
 		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
 				this.urlToDownload.getUsername() + '/' + this.urlToDownload.getRepoName());
+
 		CloneCommand clone = new CloneCommand().setDirectory(directoryToDownloadTo)
 				.setURI(this.urlToDownload.getBareURL().toString());
+
 		clone.setBranch(hash != null ? hash : urlToDownload.getBranch());
+
 		if (this.oauthToken != null) {
 			clone.setCredentialsProvider(new UsernamePasswordCredentialsProvider("${token}", oauthToken));
 		}
