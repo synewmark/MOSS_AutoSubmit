@@ -1,7 +1,11 @@
 package runner;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Scanner;
 
 import backendhandlers.MOSSHandler;
@@ -142,6 +146,24 @@ public class MOSSRunner {
 		Enviroment.setWorkingLanguage(language);
 		Enviroment.setWorkingStudentFileDir(studentFileDirectory);
 		URL resultsURL = mossHandler.execute();
+		File mossResultsFile = new File(studentFileDirectory, "MossRequestResults.htm");
+		try {
+			downloadFromURL(resultsURL, mossResultsFile, Integer.MAX_VALUE);
+			System.out.println();
+			System.out.println("Local results saved to: " + mossResultsFile);
+		} catch (IOException e) {
+			System.err.println();
+			System.err.println("Could not automatically download MOSS results!");
+			System.err.println("Make sure to save the results independently");
+		}
 		return resultsURL.toString();
+	}
+
+	private void downloadFromURL(URL urlToDownloadFrom, File fileToDownloadTo, int fileSize) throws IOException {
+		ReadableByteChannel readableByteChannel = Channels.newChannel(urlToDownloadFrom.openStream());
+		FileOutputStream fileOutputStream = new FileOutputStream(fileToDownloadTo);
+		fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, fileSize);
+		readableByteChannel.close();
+		fileOutputStream.close();
 	}
 }
