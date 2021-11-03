@@ -17,9 +17,9 @@ public class MainCommandLine {
 				System.out.println();
 				String resultsURL;
 				if (stringArray.length > 1) {
-					resultsURL = MOSSRunner.mossUpload(Arrays.copyOfRange(stringArray, 1, stringArray.length));
+					resultsURL = new MOSSRunner(Arrays.copyOfRange(stringArray, 1, stringArray.length)).execute();
 				} else {
-					resultsURL = MOSSRunner.mossUpload();
+					resultsURL = new MOSSRunner().execute();
 				}
 				System.out.println();
 				System.out.println("MOSS request completed");
@@ -32,9 +32,9 @@ public class MainCommandLine {
 				System.out.println();
 				File downloadLocation;
 				if (stringArray.length > 1) {
-					downloadLocation = GitRunner.gitDownload(Arrays.copyOfRange(stringArray, 1, stringArray.length));
+					downloadLocation = new GitRunner(Arrays.copyOfRange(stringArray, 1, stringArray.length)).execute();
 				} else {
-					downloadLocation = GitRunner.gitDownload();
+					downloadLocation = new GitRunner().execute();
 				}
 				System.out.println("Git download completed you can find your files at this directory: ");
 				System.out.println(downloadLocation);

@@ -7,21 +7,51 @@ import java.util.Scanner;
 import backendhandlers.MOSSHandler;
 
 public class MOSSRunner {
-	static Scanner scanner = new Scanner(System.in);
+	private static final Scanner scanner = new Scanner(System.in);
+	private String language;
+	private File studentFileDirectory;
+	private File baseFileDirectory;
+	private long mossID;
 
-	public static String mossUpload() {
+	public MOSSRunner(String[] params) {
+		setFields(params);
+		setUnsetFields(false);
+	}
+
+	public MOSSRunner() {
+		setUnsetFields(true);
+	}
+
+	private void setUnsetFields(boolean getOptionalFields) {
+		if (language == null) {
+			language = getLanguage();
+		}
+		if (studentFileDirectory == null) {
+			studentFileDirectory = getStudentFileDirectory();
+		}
+		if (mossID == 0) {
+			mossID = getMossID();
+		}
+		if (getOptionalFields) {
+			if (baseFileDirectory == null) {
+				baseFileDirectory = getBaseFileDirectory();
+			}
+		}
+	}
+
+	private static String getLanguage() {
 		System.out.println("Please enter the language of the files to be checked");
 		System.out.println("The folowing languages are supported: " + MOSSHandler.listOfSupportedLanguages());
 		String language = scanner.nextLine();
 		if (!MOSSHandler.checkLanguageSupported(language)) {
 			System.out.println(language + " not supported");
 			System.out.println("Only the following languages are supported: " + MOSSHandler.listOfSupportedLanguages());
-			return mossUpload();
+			return getLanguage();
 		}
-		return mossUpload(language);
+		return language;
 	}
 
-	private static String mossUpload(String language) {
+	private static File getStudentFileDirectory() {
 		// cache dir for performance and to avoid value being altered in concurrent
 		// environment
 		// that being said, code is largely not designed for concurrency requries
@@ -31,7 +61,7 @@ public class MOSSRunner {
 			System.out.println("Found working directory " + cacheLocalWorkingStudentFileDir);
 			System.out.println("Would you like to continue using that directory y/n");
 			if (scanner.nextLine().toLowerCase().equals("y")) {
-				return mossUpload(language, cacheLocalWorkingStudentFileDir);
+				return cacheLocalWorkingStudentFileDir;
 			}
 		}
 		System.out.println("Please enter the directory to the student files");
@@ -40,12 +70,12 @@ public class MOSSRunner {
 		if (!fileDirectory.canRead()) {
 			System.out.println("Cannot read from " + fileDirectory
 					+ " make sure you entered the directory properly and that you have read permission");
-			mossUpload(language);
+			return getStudentFileDirectory();
 		}
-		return mossUpload(language, fileDirectory);
+		return fileDirectory;
 	}
 
-	private static String mossUpload(String language, File studentFiles) {
+	private static File getBaseFileDirectory() {
 		System.out.println("Please enter the directory to the base files");
 		System.out.println("You can also leave this field blank if no base files need to be uploaded");
 		String stringDirectory = scanner.nextLine();
@@ -53,12 +83,12 @@ public class MOSSRunner {
 		if (!stringDirectory.isEmpty() && !fileDirectory.canRead()) {
 			System.out.println("Cannot read from " + fileDirectory
 					+ " make sure you entered the directory properly and that you have read permission");
-			mossUpload(language);
+			return getBaseFileDirectory();
 		}
-		return mossUpload(language, studentFiles, fileDirectory);
+		return fileDirectory;
 	}
 
-	private static String mossUpload(String language, File studentFileDirectory, File baseFilesDirectory) {
+	private static long getMossID() {
 		System.out.println("Please enter your MOSS ID:");
 		String mossIDString = scanner.nextLine();
 		long mossIDNumeric;
@@ -66,28 +96,12 @@ public class MOSSRunner {
 			mossIDNumeric = Long.parseLong(mossIDString);
 		} catch (NumberFormatException e) {
 			System.out.println(mossIDString + " is not a valid MOSS ID, please try again");
-			return mossUpload(language, studentFileDirectory, baseFilesDirectory);
+			return getMossID();
 		}
-		return mossUpload(language, studentFileDirectory, baseFilesDirectory, mossIDNumeric);
+		return mossIDNumeric;
 	}
 
-	private static String mossUpload(String language, File studentFileDirectory, File baseFileDirectory, long mossID) {
-		MOSSHandler mossHandler = new MOSSHandler();
-		mossHandler.setLanguage(language).addSubmissionFiles(studentFileDirectory).setUserId(mossID);
-		if (baseFileDirectory != null && !baseFileDirectory.toString().isEmpty()) {
-			mossHandler.addBaseFiles(baseFileDirectory);
-		}
-		Enviroment.setWorkingLanguage(language);
-		Enviroment.setWorkingStudentFileDir(studentFileDirectory);
-		URL resultsURL = mossHandler.execute();
-		return resultsURL.toString();
-	}
-
-	public static String mossUpload(String[] params) {
-		String language = null;
-		File studentFileDirectory = null;
-		File baseFileDirectory = null;
-		long mossID = -1;
+	private void setFields(String[] params) {
 		for (int i = 0; i < params.length; i++) {
 			switch (params[i].toLowerCase()) {
 			case "-language":
@@ -117,6 +131,17 @@ public class MOSSRunner {
 				studentFileDirectory = cacheLocalWorkingStudentFileDir;
 			}
 		}
-		return mossUpload(language, studentFileDirectory, baseFileDirectory, mossID);
+	}
+
+	public String execute() {
+		MOSSHandler mossHandler = new MOSSHandler();
+		mossHandler.setLanguage(language).addSubmissionFiles(studentFileDirectory).setUserId(mossID);
+		if (baseFileDirectory != null && !baseFileDirectory.toString().isEmpty()) {
+			mossHandler.addBaseFiles(baseFileDirectory);
+		}
+		Enviroment.setWorkingLanguage(language);
+		Enviroment.setWorkingStudentFileDir(studentFileDirectory);
+		URL resultsURL = mossHandler.execute();
+		return resultsURL.toString();
 	}
 }

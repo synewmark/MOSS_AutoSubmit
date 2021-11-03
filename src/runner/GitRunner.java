@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import gitHandler.GitHandlerAbstract;
@@ -19,49 +20,66 @@ import gitHandler.model.URLbyComponents;
 
 public class GitRunner {
 	static Scanner scanner = new Scanner(System.in);
+	String host = "https://github.com/";
+	String username;
+	File pathToRepoNameFile;
+	String subdirectory = "";
+	String branch;
+	char[] oauthToken;
+	File directoryToDownloadTo;
+	LocalDateTime timestamp = LocalDateTime.now();
+	File pathToListOfFilesToDownload;
 
-	public static File gitDownload() {
+	GitRunner(String[] params) {
+		setFields(params);
+		setUnsetFields(false);
+	}
+
+	GitRunner() {
+		setUnsetFields(true);
+	}
+
+	private static String getHost() {
 		System.out.println("Please enter the base Git URL to the files (default: https://github.com/) :");
 		String stringURL = scanner.nextLine();
 		if (stringURL.equals("")) {
 			stringURL = "https://github.com/";
 		}
-		return gitDownload(stringURL);
+		return stringURL;
 	}
 
-	private static File gitDownload(String host) {
+	private static String getUsername() {
 		System.out.println("Please enter the username hosting the repositories:");
 		String username = scanner.nextLine();
-		return gitDownload(host, username);
+		return username;
 	}
 
-	private static File gitDownload(String host, String username) {
+	private static File getPathToRepoNameFile() {
 		System.out.println("Please enter the directory to a text document hosting the list of repos :");
 		String fileOfRepos = scanner.nextLine();
 		File file = new File(fileOfRepos);
 		if (!file.exists() || !file.canRead()) {
 			System.out.println("Cannot access the file!");
 			System.out.println("Please try again");
-			return gitDownload(host, username);
+			return getPathToRepoNameFile();
 		}
-		return gitDownload(host, username, file);
+		return file;
 	}
 
-	private static File gitDownload(String host, String username, File fileOfRepos) {
+	private static String getSubdirectory() {
 		System.out.println("Please enter the subdirectory you wish to download of the git repo: ");
 		System.out.println("You may also leave this field blank to download the entire repository");
 		String directory = scanner.nextLine();
-		return gitDownload(host, username, fileOfRepos, directory);
+		return directory;
 	}
 
-	private static File gitDownload(String host, String username, File fileOfRepos, String directory) {
+	private static String getBranch() {
 		System.out.println("Please enter the branch of the Git Repository you wish to download: ");
 		String branch = scanner.nextLine();
-		return gitDownload(host, username, fileOfRepos, directory, branch);
+		return branch;
 	}
 
-	private static File gitDownload(String host, String username, File fileOfRepos, String subDirectory,
-			String branch) {
+	private static char[] getOauthToken() {
 		System.out.println("If this repo is private please enter an OAuth token with valid read permission :");
 		System.out.println("You may also wish to enter a token to avoid API limitting");
 		char[] oauthToken = null;
@@ -71,11 +89,10 @@ public class GitRunner {
 		} else {
 			oauthToken = scanner.nextLine().toCharArray();
 		}
-		return gitDownload(host, username, fileOfRepos, subDirectory, branch, oauthToken);
+		return oauthToken;
 	}
 
-	private static File gitDownload(String host, String username, File fileOfRepos, String subDirectory, String branch,
-			char[] oauthToken) {
+	private static File getDirectoryToDownloadTo() {
 		System.out.println("Please enter the directory in which you'd like these files to be downloaded");
 		System.out.println("You can also leave this field blank and a temp directory will be assigned to you");
 		String stringDirectory = scanner.nextLine();
@@ -92,13 +109,12 @@ public class GitRunner {
 		}
 		if (!checkWriteAccessOfDir(fileDirectory)) {
 			System.out.println("Cannot write to " + fileDirectory.toString() + " please try again");
-			gitDownload(host, username, fileOfRepos, subDirectory, branch, oauthToken);
+			return getDirectoryToDownloadTo();
 		}
-		return gitDownload(host, username, fileOfRepos, subDirectory, branch, oauthToken, fileDirectory);
+		return fileDirectory;
 	}
 
-	private static File gitDownload(String host, String username, File fileOfRepos, String subDirectory, String branch,
-			char[] oauthToken, File directory) {
+	private static LocalDateTime getTimeStamp() {
 		System.out.println(
 				"Please enter the ISO-8061 compliant time stamp corresponding to the latest date you wish to be downloaded");
 		System.out.println("You can also leave this field blank and the latest repository will be downloaded");
@@ -112,43 +128,45 @@ public class GitRunner {
 			} catch (DateTimeParseException e) {
 				System.out.println(
 						"Time stamp invalid, please enter an ISO-8061 compliant time stamp (YYYY-MM-DDTHH:MM:SSZ)");
-				return gitDownload(host, username, fileOfRepos, subDirectory, branch, oauthToken, directory);
+				return getTimeStamp();
 			}
 		}
-		return gitDownload(host, username, fileOfRepos, subDirectory, branch, oauthToken, directory, timestamp);
+		return timestamp;
 	}
 
-	private static File gitDownload(String host, String username, File fileOfRepos, String subDirectory, String branch,
-			char[] oauthToken, File directory, LocalDateTime timestamp) {
-		ArrayList<String> listOfRepos = new ArrayList<>();
-		BufferedReader bufferedReader = null;
-		try {
-			bufferedReader = new BufferedReader(new FileReader(fileOfRepos));
-		} catch (FileNotFoundException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+	private static File getPathToListOfFilesToDownload() {
+		System.out.println("Please enter the path to the list of files to download");
+		System.out.println("You can also leave this field blank if you wish to download the entire directory");
+		String stringDirectory = scanner.nextLine();
+		File fileDirectory = new File(stringDirectory);
+		if (!fileDirectory.canRead()) {
+			System.out.println("Cannot read from directory: " + fileDirectory);
+			System.out.println("Please try again");
+			return getPathToListOfFilesToDownload();
 		}
-		String input;
-		try {
-			while ((input = bufferedReader.readLine()) != null) {
-				listOfRepos.add(input);
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		return fileDirectory;
+	}
 
+	public File execute() {
+		List<String> listOfRepos = getListOfStringsFromFile(pathToRepoNameFile);
 		for (String repo : listOfRepos) {
 			URLbyComponents url = null;
 			try {
-				url = new URLbyComponents(host, username, repo, subDirectory, branch);
+				url = new URLbyComponents(host, username, repo, subdirectory, branch);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Downloading files from: " + url + " to directory: " + directory);
+			System.out.println(
+					"Downloading files from: " + (url.getPath().equals("") ? url.getBareURL() : url.getFullURL())
+							+ " to directory: " + directoryToDownloadTo);
 			try {
-				GitHandlerAbstract gitHandler = new GitHandlerMiddleManager().setURL(url).setDir(directory);
-				if (oauthToken.length != 0) {
+				GitHandlerAbstract gitHandler = new GitHandlerMiddleManager().setURL(url).setDir(directoryToDownloadTo);
+				if (oauthToken != null) {
 					gitHandler.setCredentials(oauthToken);
+				}
+				if (pathToListOfFilesToDownload != null) {
+					List<String> filesToDownload = getListOfStringsFromFile(pathToListOfFilesToDownload);
+					gitHandler.setFilesToDownload(filesToDownload);
 				}
 				gitHandler.execute();
 			} catch (IOException e) {
@@ -156,19 +174,62 @@ public class GitRunner {
 			}
 		}
 
-		Enviroment.setWorkingStudentFileDir(directory);
-		return directory;
+		Enviroment.setWorkingStudentFileDir(directoryToDownloadTo);
+		return directoryToDownloadTo;
 	}
 
-	public static File gitDownload(String[] params) {
-		String host = null;
-		String username = null;
-		File pathToRepoNameFile = null;
-		String path = null;
-		String branch = null;
-		char[] oauthToken = new char[0];
-		File directoryToDownloadTo = null;
-		LocalDateTime timestamp = null;
+	public void setUnsetFields(boolean getOptionalFields) {
+		if (username == null) {
+			username = getUsername();
+		}
+		if (pathToRepoNameFile == null) {
+			pathToRepoNameFile = getPathToRepoNameFile();
+		}
+		if (branch == null) {
+			branch = getBranch();
+		}
+		if (directoryToDownloadTo == null) {
+			directoryToDownloadTo = getDirectoryToDownloadTo();
+		}
+		if (getOptionalFields) {
+			if (host == null) {
+				host = getHost();
+			}
+			if (subdirectory == null) {
+				subdirectory = getSubdirectory();
+			}
+			if (oauthToken == null) {
+				oauthToken = getOauthToken();
+			}
+			if (timestamp == null) {
+				timestamp = getTimeStamp();
+			}
+			if (pathToListOfFilesToDownload == null) {
+				pathToListOfFilesToDownload = getPathToListOfFilesToDownload();
+			}
+		}
+	}
+
+	private static List<String> getListOfStringsFromFile(File file) {
+		ArrayList<String> list = new ArrayList<>();
+		BufferedReader bufferedReader = null;
+		try {
+			bufferedReader = new BufferedReader(new FileReader(file));
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		String input;
+		try {
+			while ((input = bufferedReader.readLine()) != null) {
+				list.add(input);
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		return list;
+	}
+
+	public void setFields(String[] params) {
 		for (int i = 0; i < params.length; i++) {
 			switch (params[i].toLowerCase()) {
 			case "-h":
@@ -183,12 +244,16 @@ public class GitRunner {
 
 			case "-r":
 			case "-repo":
-				pathToRepoNameFile = new File(params[++i]);
+				File pathToRepoName = new File(params[++i]);
+				if (!pathToRepoName.canRead()) {
+					throw new IllegalStateException("Cannot read from file: " + pathToRepoName);
+				}
+				pathToRepoNameFile = pathToRepoName;
 				break;
 
-			case "-p":
-			case "-path":
-				path = params[++i];
+			case "-sd":
+			case "-subdirectory":
+				subdirectory = params[++i];
 				break;
 
 			case "-b":
@@ -213,15 +278,14 @@ public class GitRunner {
 			case "-timestamp":
 				timestamp = LocalDateTime.parse(params[++i]);
 				break;
-
+			case "-files":
+			case "-f":
+				pathToListOfFilesToDownload = new File(params[++i]);
+				break;
 			default:
 				throw new IllegalArgumentException(params[i] + " is not a valid flag");
 			}
 		}
-		if (host == null) {
-			host = "https://github.com/";
-		}
-
 		if (directoryToDownloadTo == null) {
 			try {
 				directoryToDownloadTo = Files.createTempDirectory("MOSSAutoSubmit_GitFiles").toFile();
@@ -230,12 +294,6 @@ public class GitRunner {
 						"Cannot create temp directory for you, please specificy a valid directory and try again");
 			}
 		}
-		if (timestamp == null) {
-			timestamp = LocalDateTime.now();
-		}
-
-		return gitDownload(host, username, pathToRepoNameFile, path, branch, oauthToken, directoryToDownloadTo,
-				timestamp);
 	}
 
 	// checks if we have write access to the directory or if the directory doesn't
