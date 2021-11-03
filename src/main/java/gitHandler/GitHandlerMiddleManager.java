@@ -24,9 +24,9 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 			gitDownload.execute();
 		} catch (IOException e) {
 			if (GitDownloaderViaAPIRequests.getRateRemaing(oauthToken) == 0 && explicitFilesToDownload != null) {
-				System.out.println("Ran out of API requests mid request: " + urlToDownload.getUsername() + '/'
+				System.err.println("Ran out of API requests mid request: " + urlToDownload.getUsername() + '/'
 						+ urlToDownload.getRepoName());
-				System.out.println("Wiping directory and retrying with jGitClone");
+				System.err.println("Wiping directory and retrying with jGitClone");
 				deleteDirectoryExcludeExplicitFiles(directoryToDownloadTo, null);
 				execute();
 			} else {
