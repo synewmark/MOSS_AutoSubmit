@@ -29,6 +29,8 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 				System.out.println("Wiping directory and retrying with jGitClone");
 				deleteDirectoryExcludeExplicitFiles(directoryToDownloadTo, null);
 				execute();
+			} else {
+				throw new IOException(e);
 			}
 		}
 
