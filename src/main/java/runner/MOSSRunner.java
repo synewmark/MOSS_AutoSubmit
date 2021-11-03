@@ -152,7 +152,6 @@ public class MOSSRunner {
 			System.out.println();
 			System.out.println("Local results saved to: " + mossResultsFile);
 		} catch (IOException e) {
-			System.err.println();
 			System.err.println("Could not automatically download MOSS results!");
 			System.err.println("Make sure to save the results independently");
 		}
