@@ -25,7 +25,8 @@ import gitHandler.model.GitFileRepresentation;
 import gitHandler.model.URLbyComponents;
 
 public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
-
+	// urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
+	// and explicitFilesToDownload params declared in GitHandlerAbstract
 	private static Gson gson = new Gson();
 
 	private Queue<GitFileRepresentation> trees = new ArrayDeque<>();
@@ -86,7 +87,9 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 	}
 
 	private void downloadFromURL(URL urlToDownloadFrom, File fileToDownloadTo, int fileSize) throws IOException {
-		fileToDownloadTo.createNewFile();
+		if (getRateRemaing(null) < 100) {
+			throw new IOException();
+		}
 		ReadableByteChannel readableByteChannel = Channels.newChannel(urlToDownloadFrom.openStream());
 		FileOutputStream fileOutputStream = new FileOutputStream(fileToDownloadTo);
 		fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, fileSize);
@@ -109,14 +112,23 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 
 	private void populateDataStructuresWithExplicitFilesAndCreateDir(URLbyComponents urlish, String gitHash,
 			File directoryToDownloadTo, Collection<String> explicitFilesToDownload) {
+
 		directoryToDownloadTo.mkdirs();
 		for (String file : explicitFilesToDownload) {
-			URL rawURL = getGitHubRawContentURL(urlish, gitHash);
+			file = file.replace("\\", "/");
+			URLbyComponents urlToDownload;
+			try {
+				urlToDownload = new URLbyComponents(urlish.getHost(), urlish.getUsername(), urlish.getRepoName(),
+						urlish.getPath() + '/' + file, urlish.getBranch());
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException("File: " + file + " is invalid");
+			}
+			URL rawURL = getGitHubRawContentURL(urlToDownload, gitHash);
 			GitFileRepresentation gfr = new GitFileRepresentation();
 			gfr.setDownload_url(rawURL.toString());
-			gfr.setPath(file);
-			directory.add(gfr);
-			new File(directoryToDownloadTo, file).mkdirs();
+			gfr.setPath(urlish.getPath() + '/' + file);
+			files.add(gfr);
+			new File(directoryToDownloadTo, urlish.getPath() + '/' + file).getParentFile().mkdirs();
 		}
 
 	}
@@ -185,7 +197,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 	private static URL getGitHubRawContentURL(URLbyComponents urlish, String gitHash) {
 		try {
 			return new URL("https://raw.githubusercontent.com/" + urlish.getUsername() + '/' + urlish.getRepoName()
-					+ (gitHash != null ? gitHash : urlish.getBranch()) + '/' + urlish.getPath());
+					+ '/' + (gitHash != null ? gitHash : urlish.getBranch()) + urlish.getPath());
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException(
 					"URL from this operation should *always* be valid if the URLbyComponents was validly constructed");
