@@ -4,8 +4,8 @@ Params are split for git and moss:
 Git arguments are preceded by --g and the following arguments are permitted:
 
 +--------------------------+--------------------------+--------------------------+ 
-| Param:                   | Flags:                   | Optional [Default]       |
-+--------------------------+--------------------------+--------------------------+
+| Param:                   | Flags:                   | Optional [Default]       | 
++--------------------------+--------------------------+--------------------------+ 
 | Host URL                 | -h, -host                | Yes,                     |
 |                          |                          | [https://github.com/]    |
 +--------------------------+--------------------------+--------------------------+
