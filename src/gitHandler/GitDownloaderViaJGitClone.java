@@ -9,6 +9,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
+	// urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
+	// and explicitFilesToDownload params declared in GitHandlerAbstract
 
 	@Override
 	public void execute() throws IOException {
