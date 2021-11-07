@@ -17,18 +17,19 @@ import java.util.Scanner;
 import gitHandler.GitHandlerAbstract;
 import gitHandler.GitHandlerMiddleManager;
 import gitHandler.model.URLbyComponents;
+import utils.FileUtils;
 
 public class GitRunner {
-	static Scanner scanner = new Scanner(System.in);
-	String host = "https://github.com/";
-	String username;
-	File pathToRepoNameFile;
-	String subdirectory = "";
-	String branch;
-	char[] oauthToken;
-	File directoryToDownloadTo;
-	LocalDateTime timestamp = LocalDateTime.now();
-	File pathToListOfFilesToDownload;
+	private static final Scanner scanner = new Scanner(System.in);
+	private String host = "https://github.com/";
+	private String username;
+	private File pathToRepoNameFile;
+	private String subdirectory = "";
+	private String branch;
+	private char[] oauthToken;
+	private File directoryToDownloadTo;
+	private LocalDateTime timestamp = LocalDateTime.now();
+	private File pathToListOfFilesToDownload;
 
 	GitRunner(String[] params) {
 		setFields(params);
@@ -107,7 +108,7 @@ public class GitRunner {
 						"Cannot create temp directory for you, please specificy a valid directory and try again");
 			}
 		}
-		if (!checkWriteAccessOfDir(fileDirectory)) {
+		if (!FileUtils.checkWriteAccessOfDir(fileDirectory)) {
 			System.out.println("Cannot write to " + fileDirectory.toString() + " please try again");
 			return getDirectoryToDownloadTo();
 		}
@@ -294,22 +295,11 @@ public class GitRunner {
 				throw new IllegalStateException(
 						"Cannot create temp directory for you, please specificy a valid directory and try again");
 			}
+		} else {
+			if (directoryToDownloadTo.exists() && FileUtils.getNumberOfFiles(directoryToDownloadTo) != 0) {
+				throw new IllegalStateException("Directory must be empty " + directoryToDownloadTo);
+			}
 		}
 	}
 
-	// checks if we have write access to the directory or if the directory doesn't
-	// exist if we have write access to the parent directory
-	// in slightly different terms: returns true if we have write access to passed
-	// directory currently or if such a directory can be created and we'll have
-	// write permission to it
-	private static boolean checkWriteAccessOfDir(File dir) {
-		// short circuit and return false early if we're at the top of the directory
-		if (dir.equals(dir.getParentFile())) {
-			return false;
-		}
-		if (!dir.exists()) {
-			return checkWriteAccessOfDir(dir.getParentFile());
-		}
-		return dir.canWrite();
-	}
 }

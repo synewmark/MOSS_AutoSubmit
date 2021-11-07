@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 import gitHandler.model.URLbyComponents;
+import utils.FileUtils;
 
 public abstract class GitHandlerAbstract {
 	URLbyComponents urlToDownload;
@@ -25,6 +26,10 @@ public abstract class GitHandlerAbstract {
 	}
 
 	public GitHandlerAbstract setDir(File directoryToDownloadTo) {
+		if (!FileUtils.checkWriteAccessOfDir(directoryToDownloadTo)) {
+			throw new IllegalArgumentException("Cannot write to dir: " + directoryToDownloadTo);
+		}
+
 		this.directoryToDownloadTo = directoryToDownloadTo;
 		return this;
 	}

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import utils.FileUtils;
+
 public class GitHandlerMiddleManager extends GitHandlerAbstract {
 	// urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
 	// and explicitFilesToDownload params declared in GitHandlerAbstract
@@ -27,7 +29,7 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 				System.err.println("Ran out of API requests mid request: " + urlToDownload.getUsername() + '/'
 						+ urlToDownload.getRepoName());
 				System.err.println("Wiping directory and retrying with jGitClone");
-				deleteDirectoryExcludeExplicitFiles(directoryToDownloadTo, null);
+				FileUtils.deleteDir(directoryToDownloadTo);
 				execute();
 			} else {
 				throw new IOException(e);
@@ -41,9 +43,8 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 					+ urlToDownload.getRepoName() + File.separator + urlToDownload.getPath());
 			FileFilter filter = (File file) -> !dirToKeep.equals(file);
 			System.out.println(dirToKeep);
-			deleteDirectoryExcludeExplicitFiles(new File(directoryToDownloadTo,
-					urlToDownload.getUsername() + File.separator + File.separator + urlToDownload.getRepoName()),
-					filter);
+			FileUtils.deleteDirExclude(new File(directoryToDownloadTo,
+					urlToDownload.getUsername() + File.separator + urlToDownload.getRepoName()), filter);
 
 		} else if (explicitFilesToDownload != null) {
 			Set<File> set = new HashSet<>((int) (explicitFilesToDownload.size() * 0.75) + 1);
@@ -54,10 +55,8 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 				set.add(fileToAdd);
 			}
 			FileFilter filter = (File file) -> !set.contains(file);
-			deleteDirectoryExcludeExplicitFiles(
-					new File(directoryToDownloadTo, urlToDownload.getUsername() + File.separator + File.separator
-							+ urlToDownload.getRepoName() + File.separator + urlToDownload.getPath()),
-					filter);
+			FileUtils.deleteDirExclude(new File(directoryToDownloadTo, urlToDownload.getUsername() + File.separator
+					+ urlToDownload.getRepoName() + File.separator + urlToDownload.getPath()), filter);
 		}
 
 	}
@@ -85,15 +84,4 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 		other.setFilesToDownload(explicitFilesToDownload);
 	}
 
-	private void deleteDirectoryExcludeExplicitFiles(File fileToDelete, FileFilter filter) throws IOException {
-		if (fileToDelete.isDirectory()) {
-			File[] files = fileToDelete.listFiles(filter);
-			if (files != null) {
-				for (File file : files) {
-					deleteDirectoryExcludeExplicitFiles(file, filter);
-				}
-			}
-		}
-		fileToDelete.delete();
-	}
 }
