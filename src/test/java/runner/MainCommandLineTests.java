@@ -76,11 +76,6 @@ public class MainCommandLineTests {
 		MainCommandLine.main(args2);
 		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getWorkingStudentFileDir()));
 		assertTrue(new File(Enviroment.getWorkingStudentFileDir(), "MossRequestResults.htm").exists());
-		try {
-			FileUtils.deleteDir(Enviroment.getWorkingStudentFileDir());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 	}
 }

@@ -3,7 +3,6 @@ package runner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,35 +15,31 @@ public class GitRunnerTests {
 	File repos = new File(workingDir, "TestResources" + File.separatorChar + "repos.txt");
 
 	@Test
-	public void testGitDownloadExplcitFilesTempDir() throws IOException {
+	public void testGitDownloadExplcitFilesTempDir() {
 		String[] args = ("-u synewmark -r " + repos + " -b main -f " + listOfFiles1Through4).split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 8);
-		FileUtils.deleteDir(directory);
 	}
 
 	@Test
-	public void testGitDownloadAllFilesTempDir() throws IOException {
+	public void testGitDownloadAllFilesTempDir() {
 		String[] args = ("-u synewmark -r " + repos + " -b main").split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 20);
-		FileUtils.deleteDir(directory);
 	}
 
 	@Test
-	public void testGitDownloadSubdirTempDir() throws IOException {
+	public void testGitDownloadSubdirTempDir() {
 		String[] args = ("-u synewmark -r " + repos + " -b main -sd studentCode").split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 20);
-		FileUtils.deleteDir(directory);
 	}
 
 	@Test
-	public void testGitDownloadSubdirStudent9TempDir() throws IOException {
+	public void testGitDownloadSubdirStudent9TempDir() {
 		String[] args = ("-u synewmark -r " + repos + " -b main -sd studentCode/student9").split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 2);
-		FileUtils.deleteDir(directory);
 	}
 
 }
