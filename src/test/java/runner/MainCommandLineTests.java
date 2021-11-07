@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 
 import utils.FileUtils;
 
-class MainCommandLineTest {
+public class MainCommandLineTests {
 	File workingDir = new File(System.getProperty("user.dir"));
 	File listOfFiles1Through4 = new File(workingDir, "TestResources" + File.separatorChar + "ListOfFiles1Through4.txt");
 	File listOfFilesAll = new File(workingDir, "TestResources" + File.separatorChar + "ListOfFilesAll.txt");
 	File repos = new File(workingDir, "TestResources" + File.separatorChar + "repos.txt");
 
 	@Test
-	void testExplicitFilesTempDir() {
+	public void testExplicitFilesTempDir() {
 		String args[] = ("--g -u synewmark -r " + repos + " -f " + listOfFiles1Through4
 				+ " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args);
@@ -31,7 +31,7 @@ class MainCommandLineTest {
 	}
 
 	@Test
-	void testAllFilesTestDir() {
+	public void testAllFilesTestDir() {
 		File testDir = new File(workingDir, "testDownload");
 		testDir.mkdir();
 		String args[] = ("--g -u synewmark -r " + repos + " -d " + testDir + " -b main --m -l java -id 884640278")
@@ -49,7 +49,7 @@ class MainCommandLineTest {
 	}
 
 	@Test
-	void testExplicitFilesTestDir() {
+	public void testExplicitFilesTestDir() {
 		File testDir = new File(workingDir, "testDownload");
 		testDir.mkdir();
 		String args[] = ("--g -u synewmark -r " + repos + " -d " + testDir + " -f " + listOfFiles1Through4
@@ -67,7 +67,7 @@ class MainCommandLineTest {
 	}
 
 	@Test
-	void testGitAndMossSeperately() {
+	public void testGitAndMossSeperately() {
 		String args1[] = ("--g -u synewmark -r " + repos + " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args1);
 		File sfd = Enviroment.getWorkingStudentFileDir();

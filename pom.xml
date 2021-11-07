@@ -3,9 +3,10 @@
   <groupId>MOSS_AutoSubmit</groupId>
   <artifactId>MOSS_AutoSubmit</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   
   <dependencies>
+  
 	 <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 	<dependency>
 	    <groupId>com.google.code.gson</groupId>
@@ -36,6 +37,7 @@
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
         <version>5.5.2</version>
+        <scope>test</scope>
     </dependency>
     <dependency>
 	    <groupId>com.github.cqchecker</groupId>
@@ -51,5 +53,18 @@
 		    <url>https://jitpack.io</url>
 		</repository>
 	</repositories>
-  
+  <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+</properties>
+
+	<build>
+	    <plugins>
+	        <plugin>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            <version>3.0.0-M5</version>
+	        </plugin>
+	    </plugins>
+	</build>
 </project>
