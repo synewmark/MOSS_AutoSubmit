@@ -19,14 +19,14 @@ public class MOSSRunner {
 
 	public MOSSRunner(String[] params) {
 		setFields(params);
-		setUnsetFields(false);
+		getUnsetFields(false);
 	}
 
 	public MOSSRunner() {
-		setUnsetFields(true);
+		getUnsetFields(true);
 	}
 
-	private void setUnsetFields(boolean getOptionalFields) {
+	private void getUnsetFields(boolean getOptionalFields) {
 		if (language == null) {
 			language = getLanguage();
 		}
@@ -127,13 +127,13 @@ public class MOSSRunner {
 			default:
 				throw new IllegalArgumentException(params[i] + " is not a valid flag for Moss Upload");
 			}
-			File cacheLocalWorkingStudentFileDir = Enviroment.getWorkingStudentFileDir();
-			if (studentFileDirectory == null && cacheLocalWorkingStudentFileDir != null) {
-				System.out.println("Student File Directory not supplied. Using working directory: "
-						+ cacheLocalWorkingStudentFileDir);
-				System.out.println();
-				studentFileDirectory = cacheLocalWorkingStudentFileDir;
-			}
+		}
+		File cacheLocalWorkingStudentFileDir = Enviroment.getWorkingStudentFileDir();
+		if (studentFileDirectory == null && cacheLocalWorkingStudentFileDir != null) {
+			System.out.println(
+					"Student File Directory not supplied. Using working directory: " + cacheLocalWorkingStudentFileDir);
+			System.out.println();
+			studentFileDirectory = cacheLocalWorkingStudentFileDir;
 		}
 	}
 
