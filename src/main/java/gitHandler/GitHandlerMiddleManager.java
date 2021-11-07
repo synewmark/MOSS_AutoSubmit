@@ -49,9 +49,10 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 		} else if (explicitFilesToDownload != null) {
 			Set<File> set = new HashSet<>((int) (explicitFilesToDownload.size() * 0.75) + 1);
 			for (String string : explicitFilesToDownload) {
-				File fileToAdd = new File(directoryToDownloadTo,
-						urlToDownload.getUsername() + File.separator + urlToDownload.getRepoName() + File.separator
-								+ urlToDownload.getPath() + File.separator + string);
+				File relative = new File(urlToDownload.getPath(), string);
+				File base = new File(directoryToDownloadTo,
+						urlToDownload.getUsername() + File.separator + urlToDownload.getRepoName() + File.separator);
+				File fileToAdd = new File(base, relative.toString().replace('\\', File.separatorChar));
 				set.add(fileToAdd);
 			}
 			FileFilter filter = (File file) -> !set.contains(file);
