@@ -40,9 +40,9 @@
         <scope>test</scope>
     </dependency>
     <dependency>
-	    <groupId>com.github.cqchecker</groupId>
+	    <groupId>com.github.synewmark</groupId>
 	    <artifactId>codequiry-java</artifactId>
-	    <version>08d8b55676b337139d8594a13bf33d474549b788</version> <!--JitPack uses the commit ID as a version #-->
+	    <version>master-SNAPSHOT</version> <!--JitPack uses the commit ID as a version #-->
 	</dependency>
 		
   </dependencies>
