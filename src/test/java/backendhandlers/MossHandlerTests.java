@@ -7,16 +7,18 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import utils.FileUtils;
+
 public class MossHandlerTests {
-	static File testDir = new File("C:\\Users\\ahome\\OneDrive\\Desktop\\TestDir");
+	static File testDir = new File("TestDir");
 
 	@Test
 	public void testJavaNoBaseFiles() throws IOException {
 		createExampleFiles(testDir);
 		System.out.println(new MOSSHandler().setLanguage("java")
-				.addSubmissionFiles(Arrays.asList(new File(File.separator + "studentCode").listFiles()))
-				.setUserId(884640278).execute());
-//		cleanup(new File(testDir + "studentCode"));
+				.addSubmissionFiles(Arrays.asList(new File(testDir, "studentCode").listFiles())).setUserId(884640278)
+				.execute());
+		FileUtils.deleteDir(new File(testDir, "studentCode"));
 	}
 
 	public void createExampleFiles(File dir) throws IOException {
