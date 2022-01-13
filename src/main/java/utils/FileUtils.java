@@ -1,8 +1,10 @@
 package utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
@@ -83,6 +85,17 @@ public class FileUtils {
 			return checkWriteAccessOfDir(dir.getParentFile());
 		}
 		return dir.canWrite();
+	}
+
+	public static List<String> getListOfStringsFromFile(File file) throws IOException {
+		ArrayList<String> list = new ArrayList<>();
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		String input;
+		while ((input = bufferedReader.readLine()) != null) {
+			list.add(input);
+		}
+		bufferedReader.close();
+		return list;
 	}
 
 	public static File zipDirectory(File directoryToZip, File zipFileName) throws IOException {

@@ -1,20 +1,16 @@
 package runner;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
 import backendhandlers.CodequiryHandler;
+import utils.FileUtils;
 
 public class CodequiryRunner {
 	private static final Scanner scanner = new Scanner(System.in);
@@ -132,29 +128,16 @@ public class CodequiryRunner {
 			return getDirectoriesToUpload();
 		}
 		Collection<File> returnCollection = new TreeSet<>();
-		for (String string : getListOfStringsFromFile(file)) {
+		Collection<String> listOfFiles;
+		try {
+			listOfFiles = FileUtils.getListOfStringsFromFile(file);
+		} catch (IOException e) {
+			throw new IllegalStateException("Could not read from file: " + file, e);
+		}
+		for (String string : listOfFiles) {
 			returnCollection.add(new File(string));
 		}
 		return returnCollection;
-	}
-
-	private static List<String> getListOfStringsFromFile(File file) {
-		ArrayList<String> list = new ArrayList<>();
-		BufferedReader bufferedReader = null;
-		try {
-			bufferedReader = new BufferedReader(new FileReader(file));
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		String input;
-		try {
-			while ((input = bufferedReader.readLine()) != null) {
-				list.add(input);
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		return list;
 	}
 
 	private void setFields(String[] params) {
@@ -172,7 +155,13 @@ public class CodequiryRunner {
 			case "-studentdirectories":
 				File fileDirectoriesToUpload = new File(params[++i]);
 				Set<File> set = new TreeSet<>();
-				for (String string : getListOfStringsFromFile(fileDirectoriesToUpload)) {
+				Collection<String> listOfFiles;
+				try {
+					listOfFiles = FileUtils.getListOfStringsFromFile(fileDirectoriesToUpload);
+				} catch (IOException e) {
+					throw new IllegalStateException("Could not read from file: " + fileDirectoriesToUpload, e);
+				}
+				for (String string : listOfFiles) {
 					set.add(new File(string));
 				}
 				directoriesToUpload = set;

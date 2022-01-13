@@ -1,16 +1,11 @@
 package runner;
 
-import java.io.BufferedReader;
 import java.io.Console;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -149,35 +144,32 @@ public class GitRunner {
 	}
 
 	public File execute() {
-		List<String> listOfRepos = getListOfStringsFromFile(pathToRepoNameFile);
-		for (String repo : listOfRepos) {
-			URLbyComponents url = null;
-			try {
+		try {
+			List<String> listOfRepos = FileUtils.getListOfStringsFromFile(pathToRepoNameFile);
+			for (String repo : listOfRepos) {
+				URLbyComponents url = null;
 				url = new URLbyComponents(host, username, repo, subdirectory, branch);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-			System.out.println(
-					"Downloading files from: " + (url.getPath().equals("") ? url.getBareURL() : url.getFullURL())
-							+ " to directory: " + directoryToDownloadTo);
-			try {
+
+				System.out.println(
+						"Downloading files from: " + (url.getPath().equals("") ? url.getBareURL() : url.getFullURL())
+								+ " to directory: " + directoryToDownloadTo);
 				GitHandlerAbstract gitHandler = new GitHandlerMiddleManager().setURL(url).setDir(directoryToDownloadTo);
 				if (oauthToken != null) {
 					gitHandler.setCredentials(oauthToken);
 				}
 				if (pathToListOfFilesToDownload != null) {
-					List<String> filesToDownload = getListOfStringsFromFile(pathToListOfFilesToDownload);
+					List<String> filesToDownload = FileUtils.getListOfStringsFromFile(pathToListOfFilesToDownload);
 					gitHandler.setFilesToDownload(filesToDownload);
 				}
 				gitHandler.execute();
 				Enviroment.addStudentDirectory(new File(directoryToDownloadTo, username + File.separatorChar + repo));
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-		}
 
-		Enviroment.setRootWorkingStudentFileDir(directoryToDownloadTo);
-		return directoryToDownloadTo;
+			Enviroment.setRootWorkingStudentFileDir(directoryToDownloadTo);
+			return directoryToDownloadTo;
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public void setUnsetFields(boolean getOptionalFields) {
@@ -210,25 +202,6 @@ public class GitRunner {
 				pathToListOfFilesToDownload = getPathToListOfFilesToDownload();
 			}
 		}
-	}
-
-	private static List<String> getListOfStringsFromFile(File file) {
-		ArrayList<String> list = new ArrayList<>();
-		BufferedReader bufferedReader = null;
-		try {
-			bufferedReader = new BufferedReader(new FileReader(file));
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		String input;
-		try {
-			while ((input = bufferedReader.readLine()) != null) {
-				list.add(input);
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		return list;
 	}
 
 	public void setFields(String[] params) {
