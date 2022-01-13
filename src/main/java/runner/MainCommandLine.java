@@ -8,6 +8,7 @@ public class MainCommandLine {
 	static Scanner scanner = new Scanner(System.in);
 	static String[] gitRequest;
 	static String[] mossRequest;
+	static String[] codequiryRequest;
 
 	public static void main(String[] args) {
 		String[][] parsedArgs = parser(args);
@@ -18,6 +19,10 @@ public class MainCommandLine {
 		}
 		if (mossRequest != null) {
 			mossRequest();
+		}
+
+		if (codequiryRequest != null) {
+			codequiryRequest();
 		}
 
 	}
@@ -32,6 +37,10 @@ public class MainCommandLine {
 
 			case "--g":
 				gitRequest = Arrays.copyOfRange(stringArray, 1, stringArray.length);
+				break;
+
+			case "--c":
+				codequiryRequest = Arrays.copyOfRange(stringArray, 1, stringArray.length);
 				break;
 
 			default:
@@ -68,6 +77,21 @@ public class MainCommandLine {
 		System.out.println("You can view your results here: " + resultsURL);
 		System.out.println();
 
+	}
+
+	private static void codequiryRequest() {
+		System.out.println("Executing Codequiry request...");
+		System.out.println();
+		String resultsURL;
+		if (codequiryRequest.length > 0) {
+			resultsURL = new CodequiryRunner(codequiryRequest).execute().toString();
+		} else {
+			resultsURL = new CodequiryRunner().execute().toString();
+		}
+		System.out.println();
+		System.out.println("Codequiry request completed");
+		System.out.println("You can view your results here: " + resultsURL);
+		System.out.println();
 	}
 
 	private static String[][] parser(String[] inputs) {
