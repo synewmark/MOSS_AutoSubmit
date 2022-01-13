@@ -170,12 +170,13 @@ public class GitRunner {
 					gitHandler.setFilesToDownload(filesToDownload);
 				}
 				gitHandler.execute();
+				Enviroment.addStudentDirectory(new File(directoryToDownloadTo, username + File.separatorChar + repo));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		Enviroment.setWorkingStudentFileDir(directoryToDownloadTo);
+		Enviroment.setRootWorkingStudentFileDir(directoryToDownloadTo);
 		return directoryToDownloadTo;
 	}
 

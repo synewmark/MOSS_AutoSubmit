@@ -60,7 +60,7 @@ public class MOSSRunner {
 		// environment
 		// that being said, code is largely not designed for concurrency requries
 		// further alterations if pushed in that direction
-		File cacheLocalWorkingStudentFileDir = Enviroment.getWorkingStudentFileDir();
+		File cacheLocalWorkingStudentFileDir = Enviroment.getRootWorkingStudentFileDir();
 		if (cacheLocalWorkingStudentFileDir != null) {
 			System.out.println("Found working directory " + cacheLocalWorkingStudentFileDir);
 			System.out.println("Would you like to continue using that directory y/n");
@@ -128,7 +128,7 @@ public class MOSSRunner {
 				throw new IllegalArgumentException(params[i] + " is not a valid flag for Moss Upload");
 			}
 		}
-		File cacheLocalWorkingStudentFileDir = Enviroment.getWorkingStudentFileDir();
+		File cacheLocalWorkingStudentFileDir = Enviroment.getRootWorkingStudentFileDir();
 		if (studentFileDirectory == null && cacheLocalWorkingStudentFileDir != null) {
 			System.out.println(
 					"Student File Directory not supplied. Using working directory: " + cacheLocalWorkingStudentFileDir);
@@ -144,7 +144,7 @@ public class MOSSRunner {
 			mossHandler.addBaseFiles(baseFileDirectory);
 		}
 		Enviroment.setWorkingLanguage(language);
-		Enviroment.setWorkingStudentFileDir(studentFileDirectory);
+		Enviroment.setRootWorkingStudentFileDir(studentFileDirectory);
 		URL resultsURL = mossHandler.execute();
 		File mossResultsFile = new File(studentFileDirectory, "MossRequestResults.htm");
 		try {
