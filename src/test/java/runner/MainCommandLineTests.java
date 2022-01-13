@@ -18,13 +18,13 @@ public class MainCommandLineTests {
 
 	@Test
 	public void testExplicitFilesTempDir() {
-		String args[] = ("--g -u synewmark -r " + repos + " -f " + listOfFiles1Through4
+		String args[] = ("--g -u synewmark-resources -r " + repos + " -f " + listOfFiles1Through4
 				+ " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args);
-		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
+		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
 		try {
-			FileUtils.deleteDir(Enviroment.getWorkingStudentFileDir());
+			FileUtils.deleteDir(Enviroment.getRootWorkingStudentFileDir());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -34,11 +34,11 @@ public class MainCommandLineTests {
 	public void testAllFilesTestDir() {
 		File testDir = new File(workingDir, "testDownload");
 		testDir.mkdir();
-		String args[] = ("--g -u synewmark -r " + repos + " -d " + testDir + " -b main --m -l java -id 884640278")
-				.split(" ");
+		String args[] = ("--g -u synewmark-resources -r " + repos + " -d " + testDir
+				+ " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args);
-		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
+		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
 		try {
 			if (!FileUtils.deleteDir(testDir)) {
 				System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
@@ -52,11 +52,11 @@ public class MainCommandLineTests {
 	public void testExplicitFilesTestDir() {
 		File testDir = new File(workingDir, "testDownload");
 		testDir.mkdir();
-		String args[] = ("--g -u synewmark -r " + repos + " -d " + testDir + " -f " + listOfFiles1Through4
+		String args[] = ("--g -u synewmark-resources -r " + repos + " -d " + testDir + " -f " + listOfFiles1Through4
 				+ " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args);
-		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
+		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
 		try {
 			if (!FileUtils.deleteDir(testDir)) {
 				System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
@@ -68,14 +68,14 @@ public class MainCommandLineTests {
 
 	@Test
 	public void testGitAndMossSeperately() {
-		String args1[] = ("--g -u synewmark -r " + repos + " -b main --m -l java -id 884640278").split(" ");
+		String args1[] = ("--g -u synewmark-resources -r " + repos + " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args1);
-		File sfd = Enviroment.getWorkingStudentFileDir();
-		Enviroment.setWorkingStudentFileDir(null);
+		File sfd = Enviroment.getRootWorkingStudentFileDir();
+		Enviroment.setRootWorkingStudentFileDir(null);
 		String args2[] = ("--m -id 884640278 -l java -sfd " + sfd).split(" ");
 		MainCommandLine.main(args2);
-		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
+		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
 
 	}
 }

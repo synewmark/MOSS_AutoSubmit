@@ -16,28 +16,28 @@ public class GitRunnerTests {
 
 	@Test
 	public void testGitDownloadExplcitFilesTempDir() {
-		String[] args = ("-u synewmark -r " + repos + " -b main -f " + listOfFiles1Through4).split(" ");
+		String[] args = ("-u synewmark-resources -r " + repos + " -b main -f " + listOfFiles1Through4).split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 8);
 	}
 
 	@Test
 	public void testGitDownloadAllFilesTempDir() {
-		String[] args = ("-u synewmark -r " + repos + " -b main").split(" ");
+		String[] args = ("-u synewmark-resources -r " + repos + " -b main").split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 20);
 	}
 
 	@Test
 	public void testGitDownloadSubdirTempDir() {
-		String[] args = ("-u synewmark -r " + repos + " -b main -sd studentCode").split(" ");
+		String[] args = ("-u synewmark-resources -r " + repos + " -b main -sd studentCode").split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 20);
 	}
 
 	@Test
 	public void testGitDownloadSubdirStudent9TempDir() {
-		String[] args = ("-u synewmark -r " + repos + " -b main -sd studentCode/student9").split(" ");
+		String[] args = ("-u synewmark-resources -r " + repos + " -b main -sd studentCode/student9").split(" ");
 		File directory = new GitRunner(args).execute();
 		assertEquals(FileUtils.getNumberOfFiles(directory), 2);
 	}
