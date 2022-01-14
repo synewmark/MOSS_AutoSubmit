@@ -33,7 +33,6 @@ public class MossHandlerTests {
 				writer.write(s + (" ".repeat((int) (Math.random() * 3) + 1)));
 			}
 			writer.close();
-			System.out.println(file);
 		}
 	}
 
