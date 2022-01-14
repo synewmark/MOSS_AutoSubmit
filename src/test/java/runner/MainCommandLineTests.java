@@ -76,6 +76,6 @@ public class MainCommandLineTests {
 		MainCommandLine.main(args2);
 		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
 		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
-
 	}
+
 }
