@@ -13,9 +13,9 @@ public class Secrets {
 		try {
 			File secrets = new File("Secret.log");
 			setFields(FileUtils.getListOfStringsFromFile(secrets));
-
 		} catch (IOException e) {
 			System.err.println("Failed to load API keys proceding without them");
+			System.out.println(e);
 		}
 	}
 
