@@ -89,8 +89,8 @@ public class MainCommandLine {
 			resultsURL = new CodequiryRunner().execute().toString();
 		}
 		System.out.println();
-		System.out.println("Codequiry request completed");
-		System.out.println("You can view your results here: " + resultsURL);
+		System.out.println("Codequiry check creation+upload completed");
+		System.out.println("You can finish execute your request at the following URL: " + resultsURL);
 		System.out.println();
 	}
 

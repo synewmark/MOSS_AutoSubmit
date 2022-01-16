@@ -13,7 +13,6 @@ import java.util.TreeSet;
 
 import src.CodequirySDK;
 import src.model.Check;
-import src.model.CheckStatus;
 import utils.FileUtils;
 
 public class CodequiryHandler {
@@ -68,10 +67,9 @@ public class CodequiryHandler {
 		for (File uploadFile : zipFilesToUpload) {
 			api.upload(check.getId(), uploadFile.toString());
 		}
-
-		CheckStatus checkStatus = api.startCheck(checkId);
 		try {
-			return new URL(checkStatus.getCheckURL());
+			return new URL(String.format("https://dashboard.codequiry.com/course/%d/assignment/%d/submission",
+					check.getCourse_id(), check.getId()));
 		} catch (MalformedURLException e) {
 			throw new IOException("Invalid response from the server", e);
 		}
