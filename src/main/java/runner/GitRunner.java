@@ -85,6 +85,9 @@ public class GitRunner {
 		} else {
 			oauthToken = scanner.nextLine().toCharArray();
 		}
+		if (oauthToken.length == 0) {
+			return null;
+		}
 		return oauthToken;
 	}
 
@@ -93,7 +96,7 @@ public class GitRunner {
 		System.out.println("You can also leave this field blank and a temp directory will be assigned to you");
 		String stringDirectory = scanner.nextLine();
 		File fileDirectory = null;
-		if (stringDirectory.length() > 0) {
+		if (!stringDirectory.isBlank()) {
 			fileDirectory = new File(stringDirectory);
 		} else {
 			try {
@@ -134,6 +137,9 @@ public class GitRunner {
 		System.out.println("Please enter the path to the list of files to download");
 		System.out.println("You can also leave this field blank if you wish to download the entire directory");
 		String stringDirectory = scanner.nextLine();
+		if (stringDirectory.isBlank()) {
+			return null;
+		}
 		File fileDirectory = new File(stringDirectory);
 		if (!fileDirectory.canRead()) {
 			System.out.println("Cannot read from directory: " + fileDirectory);
