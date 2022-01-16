@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import utils.FileUtils;
@@ -15,6 +16,18 @@ public class MainCommandLineTests {
 	File listOfFiles1Through4 = new File(workingDir, "TestResources" + File.separatorChar + "ListOfFiles1Through4.txt");
 	File listOfFilesAll = new File(workingDir, "TestResources" + File.separatorChar + "ListOfFilesAll.txt");
 	File repos = new File(workingDir, "TestResources" + File.separatorChar + "repos.txt");
+	File testDir = new File(workingDir, "testDownload");
+
+	@AfterEach
+	public void deleteTestDir() {
+		try {
+			if (!FileUtils.deleteDir(testDir)) {
+				System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
+			}
+		} catch (IOException e) {
+			System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
+		}
+	}
 
 	@Test
 	public void testExplicitFilesTempDir() {
@@ -23,47 +36,26 @@ public class MainCommandLineTests {
 		MainCommandLine.main(args);
 		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
 		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
-		try {
-			FileUtils.deleteDir(Enviroment.getRootWorkingStudentFileDir());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Test
 	public void testAllFilesTestDir() {
-		File testDir = new File(workingDir, "testDownload");
 		testDir.mkdir();
 		String args[] = ("--g -u synewmark-resources -r " + repos + " -d " + testDir
 				+ " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args);
 		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
 		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
-		try {
-			if (!FileUtils.deleteDir(testDir)) {
-				System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
-			}
-		} catch (IOException e) {
-			System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
-		}
 	}
 
 	@Test
 	public void testExplicitFilesTestDir() {
-		File testDir = new File(workingDir, "testDownload");
 		testDir.mkdir();
 		String args[] = ("--g -u synewmark-resources -r " + repos + " -d " + testDir + " -f " + listOfFiles1Through4
 				+ " -b main --m -l java -id 884640278").split(" ");
 		MainCommandLine.main(args);
 		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
 		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
-		try {
-			if (!FileUtils.deleteDir(testDir)) {
-				System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
-			}
-		} catch (IOException e) {
-			System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
-		}
 	}
 
 	@Test
