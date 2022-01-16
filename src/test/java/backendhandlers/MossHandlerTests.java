@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import utils.FileUtils;
 
 public class MossHandlerTests {
-	static File testDir = new File("TestDir");
+	static File testDir = new File("testDownload");
 
 	@Test
 	public void testJavaNoBaseFiles() throws IOException {
