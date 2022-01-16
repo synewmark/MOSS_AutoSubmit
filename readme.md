@@ -143,3 +143,60 @@ Moss arguments are preceded by --m and accept the following arguments
   </tr>
 </table>
 
+Codequiry arguments are preceded by --g and accept the following arguments 
+
+
+<table>
+  <tr>
+   <td>Param: 
+   </td>
+   <td>Flags: 
+   </td>
+   <td>Optional:
+   </td>
+  </tr>
+  <tr>
+   <td>Language
+   </td>
+   <td>-l, -language
+   </td>
+   <td>No, unless preceded by --m call
+   </td>
+  </tr>
+  <tr>
+   <td>Text file that contains list of Student directories
+   </td>
+   <td>-sd -studentdirectories
+   </td>
+   <td>No, unless preceded by --g call
+   </td>
+  </tr>
+  <tr>
+   <td>Request name
+   </td>
+   <td>-n, -name
+   </td>
+   <td>Yes
+   </td>
+  </tr>
+  <tr>
+   <td>Codequiry API Key
+   </td>
+   <td>-key, -apikey
+   </td>
+   <td>No
+   </td>
+  </tr>
+</table>
+
+Note the difference between MOSS and Codequiry when submitting the student files: MOSS accepts entire directories distinguishing between different students implicitly based on directory structure so, the directory can be the root of **all** student files whereas Codeqiry requires distinct zip files for each student requiring a list of individual students to be passed to AutoSubmit
+
+All params that take a text file must be in the form of text file to a list of new line character separated relative or absolute directories. The file must also have a terminating new line. See \TestResources for valid examples.
+
+Examples of valid commands include 
+
+--g -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" -b studentCode -b main --c -l java -apikey *codequiry_api_key*
+
+--c -l java -apikey *codequiry_api_key* -sd "C:\Users\ahome\OneDrive\Desktop\StudentDirectories.txt"
+
+--m -l java -apikey *MOSS API key* -sfd "C:\Users\ahome\OneDrive\Desktop\StudentFiles\
