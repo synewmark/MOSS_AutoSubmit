@@ -143,6 +143,9 @@ public class CodequiryRunner {
 	private void setFields(String[] params) {
 		for (int i = 0; i < params.length; i++) {
 			switch (params[i].toLowerCase()) {
+			case "-name":
+			case "-n":
+				name = params[++i];
 			case "-language":
 			case "-l":
 				language = params[++i];
