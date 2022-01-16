@@ -57,7 +57,6 @@ public class CodequiryHandler {
 		CodequirySDK api = new CodequirySDK(apiKey);
 		Check check = api.createCheck(checkName, Integer.toString(language));
 		SortedSet<File> zipFilesToUpload = new TreeSet<>();
-		int checkId = check.getId();
 		for (File directoryToSubmit : setOfDirectoriesToSubmit) {
 			File fileToUpload = FileUtils.zipDirectory(directoryToSubmit,
 					new File(directoryToSubmit.getParent(), String.format("%sZip_FileCount%d.zip",
