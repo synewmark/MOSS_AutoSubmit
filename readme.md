@@ -1,3 +1,4 @@
+
 Params are split for git and moss:
 
 Git arguments are preceded by --g and the following arguments are permitted:
@@ -191,12 +192,16 @@ Codequiry arguments are preceded by --g and accept the following arguments
 
 Note the difference between MOSS and Codequiry when submitting the student files: MOSS accepts entire directories distinguishing between different students implicitly based on directory structure so, the directory can be the root of **all** student files whereas Codeqiry requires distinct zip files for each student requiring a list of individual students to be passed to AutoSubmit
 
-All params that take a text file must be in the form of text file to a list of new line character separated relative or absolute directories. The file must also have a terminating new line. See \TestResources for valid examples.
+All params that take a text file must be in the form of text file to a list of new line character separated relative or absolute directories. See \TestResources for valid examples.
 
-Examples of valid commands include 
+The code can also be run via interactive mode which prompts the user for inputs. To run that simply include the large flags for each of the functions you want to run. i.e. --m --g to run Git and Moss
+
+Examples of valid commands include:
 
 --g -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" -b studentCode -b main --c -l java -apikey *codequiry_api_key*
 
 --c -l java -apikey *codequiry_api_key* -sd "C:\Users\ahome\OneDrive\Desktop\StudentDirectories.txt"
 
 --m -l java -apikey *MOSS API key* -sfd "C:\Users\ahome\OneDrive\Desktop\StudentFiles\
+
+--g --m --c
