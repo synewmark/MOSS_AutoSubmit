@@ -21,7 +21,7 @@ public class MainCommandLineTests {
 	@AfterEach
 	public void deleteTestDir() {
 		try {
-			if (!FileUtils.deleteDir(testDir)) {
+			if (testDir.exists() && !FileUtils.deleteDir(testDir)) {
 				System.err.println("Failed to delete directory, make sure to manually delete before rerunning tests");
 			}
 		} catch (IOException e) {
