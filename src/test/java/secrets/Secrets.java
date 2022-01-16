@@ -11,11 +11,11 @@ public class Secrets {
 	private static String GitHubAPI;
 	static {
 		try {
-			File secrets = new File("Secret.log");
+			File secrets = new File("secret.log");
 			setFields(FileUtils.getListOfStringsFromFile(secrets));
 		} catch (IOException e) {
 			System.err.println("Failed to load API keys proceding without them");
-			System.out.println(e);
+			System.err.println(e);
 		}
 	}
 
