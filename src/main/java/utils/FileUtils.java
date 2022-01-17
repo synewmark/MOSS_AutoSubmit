@@ -139,9 +139,4 @@ public class FileUtils {
 	private FileUtils() {
 	}
 
-	public static void main(String... args) throws IOException {
-		zipDirectory(new File("C:\\Users\\ahome\\OneDrive\\Documents\\YU\\test.txt"),
-				new File("C:\\Users\\ahome\\OneDrive\\Documents\\YU\\test.zip"));
-	}
-
 }
