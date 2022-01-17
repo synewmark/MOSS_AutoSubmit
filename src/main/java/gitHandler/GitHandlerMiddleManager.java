@@ -12,20 +12,16 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 	// urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
 	// and explicitFilesToDownload params declared in GitHandlerAbstract
 
-	static double currentCost = 0;
-
 	private boolean usingAPI = false;
 
 	@Override
 	public void execute() throws IOException {
 		GitHandlerAbstract gitDownload = getProperGitAbstractInstance();
 		passGitHandlerFieldsTo(gitDownload);
-		int currentRequestsRemaining = 0;
-		currentRequestsRemaining = GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
 		try {
 			gitDownload.execute();
 		} catch (IOException e) {
-			if (GitDownloaderViaAPIRequests.getRateRemaing(oauthToken) == 0 && explicitFilesToDownload != null) {
+			if (GitDownloaderViaAPIRequests.getRateRemaing(oauthToken) == 0 && usingAPI) {
 				System.err.println("Ran out of API requests mid request: " + urlToDownload.getUsername() + '/'
 						+ urlToDownload.getRepoName());
 				System.err.println("Wiping directory and retrying with jGitClone");
@@ -36,23 +32,28 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 			}
 		}
 
-		if (usingAPI) {
-			currentCost = currentRequestsRemaining - GitDownloaderViaAPIRequests.getRateRemaing(oauthToken);
-		} else if (!urlToDownload.getPath().equals("")) {
-			File dirToKeep = new File(directoryToDownloadTo, urlToDownload.getUsername() + File.separator
-					+ urlToDownload.getRepoName() + File.separator + urlToDownload.getPath());
-			FileFilter filter = (File file) -> !dirToKeep.equals(file);
-			System.out.println(dirToKeep);
-			FileUtils.deleteDirExclude(new File(directoryToDownloadTo,
-					urlToDownload.getUsername() + File.separator + urlToDownload.getRepoName()), filter);
+		if (!usingAPI) {
+			cleanupDirectory();
+		}
+	}
 
-		} else if (explicitFilesToDownload != null) {
+	private void cleanupDirectory() throws IOException {
+		File directoryToRepo = new File(directoryToDownloadTo,
+				this.urlToDownload.getUsername() + File.separator + this.urlToDownload.getRepoName());
+
+		FileUtils.deleteDir(new File(directoryToRepo, ".git"));
+
+		if (!urlToDownload.getPath().isEmpty()) {
+			File dirToKeep = new File(directoryToRepo, urlToDownload.getPath());
+			FileFilter filter = (File file) -> !dirToKeep.equals(file);
+			FileUtils.deleteDirExclude(directoryToRepo, filter);
+		}
+
+		if (explicitFilesToDownload != null) {
 			Set<File> set = new HashSet<>((int) (explicitFilesToDownload.size() * 0.75) + 1);
-			for (String string : explicitFilesToDownload) {
-				File relative = new File(urlToDownload.getPath(), string);
-				File base = new File(directoryToDownloadTo,
-						urlToDownload.getUsername() + File.separator + urlToDownload.getRepoName() + File.separator);
-				File fileToAdd = new File(base, relative.toString().replace('\\', File.separatorChar));
+			for (String specificFile : explicitFilesToDownload) {
+				File relative = new File(urlToDownload.getPath().replace('\\', File.separatorChar), specificFile);
+				File fileToAdd = new File(directoryToRepo, relative.toString());
 				set.add(fileToAdd);
 			}
 			FileFilter filter = (File file) -> !set.contains(file);
@@ -69,7 +70,7 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 		} catch (IOException e) {
 			return new GitDownloaderViaJGitClone();
 		}
-		if (explicitFilesToDownload != null && rateRemaining > 40) {
+		if ((explicitFilesToDownload != null || !urlToDownload.getPath().isEmpty()) && rateRemaining > 40) {
 			usingAPI = true;
 			return new GitDownloaderViaAPIRequests();
 		} else {

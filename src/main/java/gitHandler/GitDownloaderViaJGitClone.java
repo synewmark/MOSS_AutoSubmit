@@ -8,8 +8,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
-import utils.FileUtils;
-
 public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 	// urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
 	// and explicitFilesToDownload params declared in GitHandlerAbstract
@@ -21,7 +19,7 @@ public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 			hash = GitDownloaderViaAPIRequests.getGitCommitForDate(urlToDownload, dateToDownload, oauthToken);
 		}
 		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
-				this.urlToDownload.getUsername() + '/' + this.urlToDownload.getRepoName());
+				this.urlToDownload.getUsername() + File.separator + this.urlToDownload.getRepoName());
 
 		CloneCommand clone = new CloneCommand().setDirectory(directoryToDownloadTo)
 				.setURI(this.urlToDownload.getBareURL().toString());
@@ -35,8 +33,6 @@ public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 			Git git = clone.call();
 			git.getRepository().close();
 			git.close();
-			FileUtils.deleteDir(new File(directoryToDownloadTo, ".git"));
-
 		} catch (GitAPIException e) {
 			throw new IOException(e);
 		}
