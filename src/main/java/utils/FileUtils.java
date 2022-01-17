@@ -102,19 +102,16 @@ public class FileUtils {
 	}
 
 	public static File zipDirectory(File directoryToZip, File zipFileName) throws IOException {
-		if (!directoryToZip.isDirectory()) {
-			throw new IllegalArgumentException(directoryToZip + " is not a directory");
-		}
 		if (!directoryToZip.canRead()) {
 			throw new IllegalArgumentException("Cannot read from: " + directoryToZip
 					+ " make sure the directory is named correctly and that you have the required permissions");
 		}
 		zipFileName.getParentFile().mkdirs();
 		// use Try despite throw in method to ensure closing of resources
-		try (FileOutputStream fileOutput = new FileOutputStream(zipFileName);
-				ZipOutputStream zipOutput = new ZipOutputStream(fileOutput);) {
+		try (ZipOutputStream zipOutput = new ZipOutputStream(new FileOutputStream(zipFileName))) {
 			Queue<File> filesToZip = new ArrayDeque<>();
 			filesToZip.add(directoryToZip);
+			directoryToZip = directoryToZip.getParentFile();
 			while (!filesToZip.isEmpty()) {
 				File currFile = filesToZip.poll();
 				if (currFile.isDirectory()) {
@@ -141,4 +138,10 @@ public class FileUtils {
 
 	private FileUtils() {
 	}
+
+	public static void main(String... args) throws IOException {
+		zipDirectory(new File("C:\\Users\\ahome\\OneDrive\\Documents\\YU\\test.txt"),
+				new File("C:\\Users\\ahome\\OneDrive\\Documents\\YU\\test.zip"));
+	}
+
 }
