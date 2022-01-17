@@ -62,6 +62,7 @@ public class CodequiryHandler {
 					new File(directoryToSubmit.getParent(), String.format("%sZip_FileCount%d.zip",
 							FileUtils.getFileName(directoryToSubmit), FileUtils.getNumberOfFiles(directoryToSubmit))));
 			zipFilesToUpload.add(fileToUpload);
+//			fileToUpload.deleteOnExit();
 		}
 		for (File uploadFile : zipFilesToUpload) {
 			api.upload(check.getId(), uploadFile.toString());
