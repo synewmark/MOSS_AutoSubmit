@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
@@ -119,13 +120,31 @@ public class CodequiryRunner {
 				}
 			}
 		}
-		System.out.println("Please enter the path to the list of student directories to download");
+		boolean directory;
+		System.out.println(
+				"Please enter whether the directory about to be passed is to a root directory or a text list of directories");
+		while (true) {
+			System.out.println("Please enter \"root\" if it's a root and \"txt\" if it's a text file");
+			String reponse = scanner.nextLine();
+			if (reponse.equals("root")) {
+				directory = true;
+				break;
+			} else if (reponse.equals("txt")) {
+				directory = false;
+				break;
+			}
+		}
+		System.out.println("Now please enter the path");
 		String reponse = scanner.nextLine();
 		File file = new File(reponse);
 		if (!file.canRead()) {
 			System.out.println("Cannot read from file: " + reponse);
 			System.out.println("Please try again");
 			return getDirectoriesToUpload();
+		}
+		if (directory) {
+			return new TreeSet<File>(List.of(file.listFiles()));
+
 		}
 		Collection<File> returnCollection = new TreeSet<>();
 		Collection<String> listOfFiles;
@@ -155,7 +174,13 @@ public class CodequiryRunner {
 				apiKey = params[++i];
 				break;
 			case "-sd":
-			case "-studentdirectories":
+			case "studentdirectory":
+				File rootDirectory = new File(params[++i]);
+				directoriesToUpload = new TreeSet<File>(List.of(rootDirectory.listFiles()));
+				break;
+
+			case "-sdf":
+			case "-studentdirectoriesfile":
 				File fileDirectoriesToUpload = new File(params[++i]);
 				Set<File> set = new TreeSet<>();
 				Collection<String> listOfFiles;
