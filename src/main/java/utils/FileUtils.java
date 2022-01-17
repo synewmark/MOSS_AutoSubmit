@@ -20,6 +20,9 @@ import java.util.zip.ZipOutputStream;
 public class FileUtils {
 
 	public static int getNumberOfFiles(File startDirectory) {
+		if (startDirectory.isFile()) {
+			return 1;
+		}
 		int count = 0;
 		File[] list = startDirectory.listFiles();
 		if (list != null) {
