@@ -1,8 +1,8 @@
 
-Params are split for git and moss:
+
+Params are split for git, moss, and codequiry:
 
 Git arguments are preceded by --g and the following arguments are permitted:
-
 
 <table>
   <tr>
@@ -165,11 +165,19 @@ Codequiry arguments are preceded by --g and accept the following arguments
    </td>
   </tr>
   <tr>
-   <td>Text file that contains list of Student directories
+   <td>Root parent directory of student directories
    </td>
    <td>-sd -studentdirectories
    </td>
-   <td>No, unless preceded by --g call
+   <td>No, unless preceded by --g call or -sdf/studentdirectoriesfiles arguement
+   </td>
+  </tr>
+  <tr>
+    <td>Text file that contains list of Student directories
+   </td>
+   <td>-sdf -studentdirectoriesfiles
+   </td>
+   <td>No, unless preceded by --g call or -sd/studentdirectories arguement
    </td>
   </tr>
   <tr>
@@ -190,17 +198,17 @@ Codequiry arguments are preceded by --g and accept the following arguments
   </tr>
 </table>
 
-Note the difference between MOSS and Codequiry when submitting the student files: MOSS accepts entire directories distinguishing between different students implicitly based on directory structure so, the directory can be the root of **all** student files whereas Codeqiry requires distinct zip files for each student requiring a list of individual students to be passed to AutoSubmit
+Note the difference between MOSS and Codequiry when submitting the student files: MOSS accepts entire directories distinguishing between different students implicitly based on directory structure so, the directory can be the root of **all** student files whereas Codequiry needs either A. a flat directory in which every immediate child file/directory represents a distinct student or B. a list of all directories that should be treated as distinct students
 
 All params that take a text file must be in the form of text file to a list of new line character separated relative or absolute directories. See \TestResources for valid examples.
 
-The code can also be run via interactive mode which prompts the user for inputs. To run that simply include the large flags for each of the functions you want to run. i.e. --m --g to run Git and Moss
+The code can also be run via interactive mode which prompts the user for inputs. To run that simply include the large flags for each of the functions you want to run. i.e. --m --g to run Git and Moss. The interactive mode is blocking and only accepts from `System.in` making it not ideal for automation. Use command line arguments for that.
 
 Examples of valid commands include:
 
 --g -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" -b studentCode -b main --c -l java -apikey *codequiry_api_key*
 
---c -l java -apikey *codequiry_api_key* -sd "C:\Users\ahome\OneDrive\Desktop\StudentDirectories.txt"
+--c -l java -apikey *codequiry_api_key* -sdf "C:\Users\ahome\OneDrive\Desktop\StudentDirectories.txt"
 
 --m -l java -apikey *MOSS API key* -sfd "C:\Users\ahome\OneDrive\Desktop\StudentFiles\
 
