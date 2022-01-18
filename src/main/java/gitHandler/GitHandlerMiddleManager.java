@@ -55,7 +55,6 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 				File relative = new File(urlToDownload.getPath(), specificFile);
 				File fileToAdd = new File(directoryToRepo, relative.toString().replaceAll("\\\\|/", File.separator));
 				set.add(fileToAdd);
-				System.out.println(fileToAdd);
 			}
 			FileFilter filter = (File file) -> !set.contains(file);
 			FileUtils.deleteDirExclude(new File(directoryToDownloadTo, urlToDownload.getUsername() + File.separator
