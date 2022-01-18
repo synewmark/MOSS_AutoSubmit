@@ -45,7 +45,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 			dateToDownload = LocalDateTime.now();
 		}
 		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
-				this.urlToDownload.getUsername() + '/' + this.urlToDownload.getRepoName());
+				this.urlToDownload.getUsername() + File.separator + this.urlToDownload.getRepoName());
 
 		if (explicitFilesToDownload != null) {
 			downloadGitWithDeclaredFiles(urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
