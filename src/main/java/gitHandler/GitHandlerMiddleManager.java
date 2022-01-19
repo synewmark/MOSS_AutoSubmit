@@ -53,7 +53,8 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 			Set<File> set = new HashSet<>((int) (explicitFilesToDownload.size() * 0.75) + 1);
 			for (String specificFile : explicitFilesToDownload) {
 				File relative = new File(urlToDownload.getPath(), specificFile);
-				File fileToAdd = new File(directoryToRepo, relative.toString().replaceAll("\\\\|/", File.separator));
+				File fileToAdd = new File(directoryToRepo,
+						relative.toString().replace('\\', File.separatorChar).replace('/', File.separatorChar));
 				set.add(fileToAdd);
 			}
 			FileFilter filter = (File file) -> !set.contains(file);
