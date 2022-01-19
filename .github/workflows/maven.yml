@@ -36,4 +36,11 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with: 
+        name: All Files
         path: /home/runner/work/MOSS_AutoSubmit/MOSS_AutoSubmit/target/
+        
+    - name: Upload JAR Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with: 
+        name: JAR File
+        path: /home/runner/work/MOSS_AutoSubmit/MOSS_AutoSubmit/target/*.jar
