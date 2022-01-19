@@ -1,0 +1,2 @@
+Manifest-version: 0.1
+Main-Class: runner.MainCommandLine
