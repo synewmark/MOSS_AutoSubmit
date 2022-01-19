@@ -81,6 +81,9 @@ public class FileUtils {
 	// write permission to it
 	public static boolean checkWriteAccessOfDir(File dir) {
 		// short circuit and return false early if we're at the top of the directory
+		if (dir == null) {
+			return false;
+		}
 		if (dir.equals(dir.getParentFile())) {
 			return false;
 		}
