@@ -29,10 +29,7 @@ public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 		if (this.oauthToken != null) {
 			clone.setCredentialsProvider(new UsernamePasswordCredentialsProvider("${token}", oauthToken));
 		}
-		try {
-			Git git = clone.call();
-			git.getRepository().close();
-			git.close();
+		try (Git git = clone.call();) {
 		} catch (GitAPIException e) {
 			throw new IOException(e);
 		}
