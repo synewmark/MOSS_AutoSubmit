@@ -58,6 +58,7 @@ public class MainCommandLine {
 		} else {
 			downloadLocation = new GitRunner().execute();
 		}
+		System.out.println();
 		System.out.println("Git download completed you can find your files at this directory: ");
 		System.out.println(downloadLocation);
 		System.out.println();
