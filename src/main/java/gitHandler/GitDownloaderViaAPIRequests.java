@@ -175,10 +175,8 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 
 	private static URL getGitHubURLForRootRequest(URLbyComponents urlish, LocalDateTime date) {
 		try {
-			System.out.println(new URL("https://api.github.com/repos/" + urlish.getUsername() + '/'
-					+ urlish.getRepoName() + "/commits" + "?per_page=1" + "&until" + date.toString()));
 			return new URL("https://api.github.com/repos/" + urlish.getUsername() + '/' + urlish.getRepoName()
-					+ "/commits" + "?per_page=1" + "&until=" + date.toString());
+					+ "/commits" + "?sha=" + urlish.getBranch() + "&per_page=1" + "&until=" + date.toString());
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException(
 					"URL from this operation should *always* be valid if the URLbyComponents was validly constructed");
