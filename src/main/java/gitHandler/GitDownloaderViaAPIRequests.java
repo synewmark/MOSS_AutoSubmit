@@ -164,6 +164,9 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 			JSONArray jsonArray = new JSONArray(tokener);
 			JSONObject jsonObj = jsonArray.getJSONObject(0);
 			shaHash = jsonObj.getString("sha");
+			if (jsonArray.length() < 1) {
+				throw new IOException("No commits found before timestamp: " + date);
+			}
 		} catch (JSONException e) {
 			throw new IllegalStateException(
 					"Likely API change. Check https://docs.github.com/en/rest/reference/repos#commits", e);
@@ -174,7 +177,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 	private static URL getGitHubURLForRootRequest(URLbyComponents urlish, LocalDateTime date) {
 		try {
 			return new URL("https://api.github.com/repos/" + urlish.getUsername() + '/' + urlish.getRepoName()
-					+ "/commits" + "?per_page=1" + "&until" + date.toString());
+					+ "/commits" + "?per_page=1" + "&until=" + date.toString());
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException(
 					"URL from this operation should *always* be valid if the URLbyComponents was validly constructed");

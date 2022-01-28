@@ -159,7 +159,9 @@ public class GitRunner {
 				System.out.println(
 						"Downloading files from: " + (url.getPath().equals("") ? url.getBareURL() : url.getFullURL())
 								+ " to directory: " + directoryToDownloadTo);
-				GitHandlerAbstract gitHandler = new GitHandlerMiddleManager().setURL(url).setDir(directoryToDownloadTo);
+				GitHandlerAbstract gitHandler = new GitHandlerMiddleManager().setURL(url).setDir(directoryToDownloadTo)
+						.setDate(timestamp);
+				;
 				if (oauthToken != null) {
 					gitHandler.setCredentials(oauthToken);
 				}
