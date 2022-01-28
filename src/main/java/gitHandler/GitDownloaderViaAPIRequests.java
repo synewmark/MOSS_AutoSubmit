@@ -44,8 +44,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 		if (dateToDownload == null) {
 			dateToDownload = LocalDateTime.now();
 		}
-		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
-				this.urlToDownload.getUsername() + File.separator + this.urlToDownload.getRepoName());
+		this.directoryToDownloadTo = new File(this.directoryToDownloadTo, this.urlToDownload.getRepoName());
 
 		if (explicitFilesToDownload != null) {
 			downloadGitWithDeclaredFiles(urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
@@ -162,6 +161,9 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 		JSONTokener tokener = getJsonFromGitGet(url, oauthToken);
 		try {
 			JSONArray jsonArray = new JSONArray(tokener);
+			if (jsonArray.length() < 1) {
+				throw new IOException("No commits found before timestamp: " + date);
+			}
 			JSONObject jsonObj = jsonArray.getJSONObject(0);
 			shaHash = jsonObj.getString("sha");
 		} catch (JSONException e) {
@@ -173,8 +175,10 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 
 	private static URL getGitHubURLForRootRequest(URLbyComponents urlish, LocalDateTime date) {
 		try {
+			System.out.println(new URL("https://api.github.com/repos/" + urlish.getUsername() + '/'
+					+ urlish.getRepoName() + "/commits" + "?per_page=1" + "&until" + date.toString()));
 			return new URL("https://api.github.com/repos/" + urlish.getUsername() + '/' + urlish.getRepoName()
-					+ "/commits" + "?per_page=1" + "&until" + date.toString());
+					+ "/commits" + "?per_page=1" + "&until=" + date.toString());
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException(
 					"URL from this operation should *always* be valid if the URLbyComponents was validly constructed");
