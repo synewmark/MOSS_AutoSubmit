@@ -208,7 +208,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 		HttpURLConnection http;
 		http = (HttpURLConnection) url.openConnection();
 		http.setRequestProperty("Accept", "application/vnd.github.v3+json");
-		if (oauthToken != null) {
+		if (oauthToken != null && oauthToken.length > 0) {
 			// what's even the point of ensuring the token stays as a char array if I need
 			// to create a string to pass it as an HTTP property?!
 			// there should be a way to pass sensitive values as a bitstream which get

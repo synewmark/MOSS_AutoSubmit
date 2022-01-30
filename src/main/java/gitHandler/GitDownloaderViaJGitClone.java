@@ -22,7 +22,8 @@ public class GitDownloaderViaJGitClone extends GitHandlerAbstract {
 
 		clone.setBranch(urlToDownload.getBranch());
 
-		if (this.oauthToken != null) {
+		if (this.oauthToken != null && oauthToken.length > 0) {
+			System.out.println(oauthToken[0]);
 			clone.setCredentialsProvider(new UsernamePasswordCredentialsProvider("${token}", oauthToken));
 		}
 		try (Git git = clone.call();) {
