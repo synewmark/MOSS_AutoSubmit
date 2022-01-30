@@ -31,43 +31,43 @@ public class MainCommandLineTests {
 
 	@Test
 	public void testExplicitFilesTempDir() {
-		String args[] = ("--g -u synewmark-resources -r " + repos + " -f " + listOfFiles1Through4
-				+ " -b main --m -l java -id 884640278").split(" ");
+		String args[] = ("-g   -u synewmark-resources -r " + repos + " --files " + listOfFiles1Through4
+				+ " -b main -m 884640278 -l java").split(" ");
 		MainCommandLine.main(args);
-		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(9, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
+		assertTrue(new File(MainCommandLine.enviroment.directory, "MossRequestResults.htm").exists());
 	}
 
 	@Test
 	public void testAllFilesTestDir() {
 		testDir.mkdir();
-		String args[] = ("--g -u synewmark-resources -r " + repos + " -d " + testDir
-				+ " -b main --m -l java -id 884640278").split(" ");
+		String args[] = ("-g   -u synewmark-resources -r " + repos + " -d " + testDir + " -b main -m 884640278 -l java")
+				.split(" ");
 		MainCommandLine.main(args);
-		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(21, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
+		assertTrue(new File(MainCommandLine.enviroment.directory, "MossRequestResults.htm").exists());
 	}
 
 	@Test
 	public void testExplicitFilesTestDir() {
 		testDir.mkdir();
-		String args[] = ("--g -u synewmark-resources -r " + repos + " -d " + testDir + " -f " + listOfFiles1Through4
-				+ " -b main --m -l java -id 884640278").split(" ");
+		String args[] = ("-g  -u synewmark-resources -r " + repos + " -d " + testDir + " --files "
+				+ listOfFiles1Through4 + " -b main -m 884640278 -l java").split(" ");
 		MainCommandLine.main(args);
-		assertEquals(9, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(9, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
+		assertTrue(new File(MainCommandLine.enviroment.directory, "MossRequestResults.htm").exists());
 	}
 
 	@Test
 	public void testGitAndMossSeperately() {
-		String args1[] = ("--g -u synewmark-resources -r " + repos + " -b main --m -l java -id 884640278").split(" ");
+		String args1[] = ("-g   -u synewmark-resources -r " + repos + " -b main -m 884640278 -l java").split(" ");
 		MainCommandLine.main(args1);
-		File sfd = Enviroment.getRootWorkingStudentFileDir();
-		Enviroment.setRootWorkingStudentFileDir(null);
-		String args2[] = ("--m -id 884640278 -l java -sfd " + sfd).split(" ");
+		File sfd = MainCommandLine.enviroment.directory;
+		MainCommandLine.enviroment.directory = null;
+		String args2[] = ("-m 884640278 -l java -d " + sfd).split(" ");
 		MainCommandLine.main(args2);
-		assertEquals(21, FileUtils.getNumberOfFiles(Enviroment.getRootWorkingStudentFileDir()));
-		assertTrue(new File(Enviroment.getRootWorkingStudentFileDir(), "MossRequestResults.htm").exists());
+		assertEquals(21, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
+		assertTrue(new File(MainCommandLine.enviroment.directory, "MossRequestResults.htm").exists());
 	}
 
 }
