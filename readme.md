@@ -225,8 +225,8 @@ Likewise the language flag is identical for MOSS and Codequiry it’s inclusion 
 
 Examples of valid commands include:
 
--g “ ” -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" --subdirectory StudentCode -b main -c *codequiry_api_key* -l java *codequiry_api_key*
+-g “ ” -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" --subdirectory StudentCode -b main -c *codequiry_api_key* -l java
 
---codequiry *Codequiry API key* -l java -apikey *codequiry_api_key* --directory "C:\Users\ahome\OneDrive\Desktop\StudentDirectories\"
+--codequiry *Codequiry API key* -l java --directory "C:\Users\ahome\OneDrive\Desktop\StudentFiles\"
 
 --moss *MOSS API key* --language java --directory "C:\Users\ahome\OneDrive\Desktop\StudentFiles\
