@@ -1,7 +1,6 @@
 package runner;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
@@ -105,7 +104,7 @@ public class GitRunner {
 				}
 				gitHandler.execute();
 				success = true;
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				System.err.println("Failed to download repo: " + repo);
 				System.err.println("Operation failed with the message: " + e.getMessage());
 			}

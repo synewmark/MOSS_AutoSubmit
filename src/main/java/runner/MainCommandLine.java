@@ -2,7 +2,6 @@ package runner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import com.google.devtools.common.options.OptionsParser;
@@ -12,11 +11,9 @@ public class MainCommandLine {
 	static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		System.out.println(Arrays.toString(args));
 		OptionsParser parser = OptionsParser.newOptionsParser(Enviroment.class);
 		parser.parseAndExitUponError(args);
 		enviroment = parser.getOptions(Enviroment.class);
-		System.out.println(Arrays.toString(enviroment.gitAPI));
 		if (enviroment.gitAPI != null) {
 			gitRequest();
 		}
