@@ -17,7 +17,7 @@ public class MainCommandLine {
 		parser.parseAndExitUponError(args);
 		enviroment = parser.getOptions(Enviroment.class);
 		System.out.println(Arrays.toString(enviroment.gitAPI));
-		if (enviroment.gitAPI != null && enviroment.gitAPI.length > 0) {
+		if (enviroment.gitAPI != null) {
 			gitRequest();
 		}
 
