@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ public class MainCommandLineTests {
 	File workingDir = new File(System.getProperty("user.dir"));
 	File listOfFiles1Through4 = new File(workingDir, "TestResources" + File.separatorChar + "ListOfFiles1Through4.txt");
 	File listOfFilesAll = new File(workingDir, "TestResources" + File.separatorChar + "ListOfFilesAll.txt");
+	File students = new File(workingDir, "TestResources" + File.separatorChar + "Students.txt");
+	File stages = new File(workingDir, "TestResources" + File.separatorChar + "Stage1+2.txt");
 	File repos = new File(workingDir, "TestResources" + File.separatorChar + "repos.txt");
 	File testDir = new File(workingDir, "testDownload");
 
@@ -68,6 +71,23 @@ public class MainCommandLineTests {
 		MainCommandLine.main(args2);
 		assertEquals(21, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
 		assertTrue(new File(MainCommandLine.enviroment.directory, "MossRequestResults.htm").exists());
+	}
+
+	@Test
+	public void testGitTimeStampNow() {
+		String args1[] = ("-g   -u synewmark-resources -b main -r " + students + " --timestamp " + LocalDateTime.now()
+				+ " --subdirectory " + "DataStructures-Spring2021-Project/stage2").split(" ");
+		MainCommandLine.main(args1);
+		assertEquals(34, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
+	}
+
+	@Test
+	public void testGitTimeStampNowJan30() {
+		String args1[] = ("-g   -u synewmark-resources -b main -r " + students
+				+ " --timestamp 2022-01-30T00:00 --subdirectory " + "DataStructures-Spring2021-Project/stage1")
+						.split(" ");
+		MainCommandLine.main(args1);
+		assertEquals(30, FileUtils.getNumberOfFiles(MainCommandLine.enviroment.directory));
 	}
 
 }
