@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import backendhandlers.MOSSHandler;
 
@@ -56,7 +58,8 @@ public class MOSSRunner {
 			mossHandler.addBaseFiles(baseFileDirectory);
 		}
 		URL resultsURL = mossHandler.execute();
-		File mossResultsFile = new File(studentFileDirectory, "MossRequestResults.htm");
+		File mossResultsFile = new File(studentFileDirectory.getParentFile(),
+				"MossRequestResults_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".htm");
 		try {
 			downloadFromURL(resultsURL, mossResultsFile, Integer.MAX_VALUE);
 			System.out.println();
