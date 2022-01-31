@@ -1,6 +1,7 @@
 package runner;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ public class GitRunner {
 			throw new IllegalArgumentException("Cannot read from repo name file: " + pathToRepoNameFile);
 		}
 
-		if (username == null) {
+		if (username == null || username.isEmpty()) {
 			throw new IllegalStateException("Git Username is not set");
 		}
 
@@ -61,7 +62,7 @@ public class GitRunner {
 			throw new IllegalStateException("Git Repo Path is not set");
 		}
 
-		if (branch == null) {
+		if (branch == null || branch.isEmpty()) {
 			throw new IllegalStateException("Git Branch is not set");
 		}
 
@@ -104,7 +105,7 @@ public class GitRunner {
 				}
 				gitHandler.execute();
 				success = true;
-			} catch (IOException e) {
+			} catch (FileNotFoundException e) {
 				System.err.println("Failed to download repo: " + repo);
 				System.err.println("Operation failed with the message: " + e.getMessage());
 			}
