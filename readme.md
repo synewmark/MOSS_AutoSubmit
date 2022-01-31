@@ -1,215 +1,232 @@
+**Git:**
 
-
-Params are split for git, moss, and codequiry:
-
-Git arguments are preceded by --g and the following arguments are permitted:
 
 <table>
   <tr>
-   <td>Param:
+   <td>Flag
    </td>
-   <td>Flags:
+   <td>Long option
    </td>
-   <td>Optional [Default]
+   <td>Name
    </td>
-  </tr>
-  <tr>
-   <td>Host URL
-   </td>
-   <td>-h, -host
-   </td>
-   <td>Yes, [https://github.com/]
+   <td>Optional (Default)
    </td>
   </tr>
   <tr>
-   <td>Repo username
+   <td>-g
    </td>
-   <td>-u, -user, -username
+   <td>--git
+   </td>
+   <td>Github Request/Oauth Token
+   </td>
+   <td>N/A
+   </td>
+  </tr>
+  <tr>
+   <td>-u
+   </td>
+   <td>--username
+   </td>
+   <td>Username
    </td>
    <td>No
    </td>
   </tr>
   <tr>
-   <td>Path to repo name file
+   <td>-r
    </td>
-   <td>-r, -repo
+   <td>--repo
+   </td>
+   <td>Path to repo txt file
    </td>
    <td>No
    </td>
   </tr>
   <tr>
-   <td>Subdirectory within repo
+   <td>-b
    </td>
-   <td>-sd, -subdirectory
+   <td>--branch
    </td>
-   <td>Yes
-   </td>
-  </tr>
-  <tr>
    <td>Branch
    </td>
-   <td>-b, -branch
-   </td>
    <td>No
    </td>
   </tr>
   <tr>
-   <td>OAuth Token
+   <td>-d
    </td>
-   <td>-o, -oauth, -oauthtoken
+   <td>--directory
    </td>
-   <td>Yes
-   </td>
-  </tr>
-  <tr>
    <td>Directory to download to
    </td>
-   <td>-d, -dir, -directory
-   </td>
-   <td>Yes, [temp directory]*
+   <td>Yes (Temp dir)*
    </td>
   </tr>
   <tr>
-   <td>Time Stamp
+   <td>
    </td>
-   <td>-t, -time, -timestamp
+   <td>--subdirectory
    </td>
-   <td>Yes, [CurrentTime]
-   </td>
-  </tr>
-  <tr>
-   <td>Path to list of specific files to download
-   </td>
-   <td>-f, -files
+   <td>Subdirectory of repo to download
    </td>
    <td>Yes
+   </td>
+  </tr>
+  <tr>
+   <td>
+   </td>
+   <td>--files
+   </td>
+   <td>Specific files to download
+   </td>
+   <td>Yes
+   </td>
+  </tr>
+  <tr>
+   <td>
+   </td>
+   <td>--timestamp
+   </td>
+   <td>Timestamp
+   </td>
+   <td>Yes (Current time)
    </td>
   </tr>
 </table>
 
 
-*OS specific, operation could fail, would then require declared directory
+_*OS specific, operation could fail, would then require declared directory_
 
-Text files for path to repo name file require a list of line separated repo names
+If executing a Git request without an Oauth token include the -g flag but add a space in quotes at the end:
 
-Text file for path to list of specific files to download requires line separated complete directories starting from the root of the repo (unless combined with the subdirectory param) ending at the specific file. Each node of the directory must be separated by a single forward slash (like in a URL).
+_-g “ “_
 
-Can combine subdirectory and path to list of files params, file path get concatenated to the end of subdirectory param. For example if wanting to pull test.txt from: https://github.com/[username]/[repo]/tree/[branch]/dir1/dir2/dir3/test.txt the correct param would be -subdirectory dir1/dir2 and -files linking to a file with the line dir3/test.txt. Using -subdirectory dir1/dir2 _and_ dir1/dir2/dir3/test.txt would result in the API looking for your file at https://github.com/[username]/[repo]/tree/[branch]/dir1/dir2/dir1/dir2/dir3/test.txt 
+Can combine subdirectory and path to list of files params, file path get concatenated to the end of subdirectory param. For example if wanting to pull test.txt from: https://github.com/[username]/[repo]/tree/[branch]/dir1/dir2/dir3/test.txt the correct param would be -subdirectory dir1/dir2 and -files linking to a file with the line dir3/test.txt. Using -subdirectory dir1/dir2 _and _dir1/dir2/dir3/test.txt would result in the API looking for your file at https://github.com/[username]/[repo]/tree/[branch]/dir1/dir2/dir1/dir2/dir3/test.txt 
 
-Under the hood your files may be downloaded using jGit.Clone or a series of requests to the GitHub traversal API + GitHub RawFile requests. The latter option will download just the files you requested with the subdirectory and specific files params, while the former will temporarily download all the files in the repo before deleting the files not specified. The handling of empty directories both in the GitHub repo and already downloaded directories made empty by the aforementioned delete operations is unspecified due the same being inconsistent by the actual Git semantics. 
-
-Moss arguments are preceded by --m and accept the following arguments 
+**MOSS:**
 
 
 <table>
   <tr>
-   <td>Param: 
+   <td>Flag
    </td>
-   <td>Flags: 
+   <td>Long option
    </td>
-   <td>Optional:
+   <td>Name
+   </td>
+   <td>Optional (Default)
    </td>
   </tr>
   <tr>
-   <td>Language
+   <td>-m
    </td>
-   <td>-l, -language
+   <td>--moss
+   </td>
+   <td>Moss Request/ID
+   </td>
+   <td>N/A
+   </td>
+  </tr>
+  <tr>
+   <td>-l
+   </td>
+   <td>--language
+   </td>
+   <td>Language of files
    </td>
    <td>No
    </td>
   </tr>
   <tr>
-   <td>Student File Directory
+   <td>-d
    </td>
-   <td>-sfd, -studentfiledirectory
+   <td>--directory
    </td>
-   <td>No, unless preceded by --g call
+   <td>Directory of student files
+   </td>
+   <td>No unless preceded by Git request
    </td>
   </tr>
   <tr>
-   <td>Base File Directory
+   <td>
    </td>
-   <td>-bfd, -basefiledirectory
+   <td>--basefiles
+   </td>
+   <td>Directory of basefiles
    </td>
    <td>Yes
    </td>
   </tr>
-  <tr>
-   <td>Moss ID
-   </td>
-   <td>-i, -id
-   </td>
-   <td>No
-   </td>
-  </tr>
 </table>
 
-Codequiry arguments are preceded by --g and accept the following arguments 
+
+**Codequiry:**
 
 
 <table>
   <tr>
-   <td>Param: 
+   <td>Flag
    </td>
-   <td>Flags: 
+   <td>Long option
    </td>
-   <td>Optional:
+   <td>Name
    </td>
-  </tr>
-  <tr>
-   <td>Language
-   </td>
-   <td>-l, -language
-   </td>
-   <td>No, unless preceded by --m call
+   <td>Optional (Default)
    </td>
   </tr>
   <tr>
-   <td>Root parent directory of student directories
+   <td>-c
    </td>
-   <td>-sd -studentdirectories
+   <td>--codequiry
    </td>
-   <td>No, unless preceded by --g call or -sdf/studentdirectoriesfiles arguement
+   <td>Codequiry Request/API
    </td>
-  </tr>
-  <tr>
-    <td>Text file that contains list of Student directories
-   </td>
-   <td>-sdf -studentdirectoriesfiles
-   </td>
-   <td>No, unless preceded by --g call or -sd/studentdirectories arguement
+   <td>N/A
    </td>
   </tr>
   <tr>
-   <td>Request name
+   <td>-l
    </td>
-   <td>-n, -name
+   <td>--language
    </td>
-   <td>Yes
-   </td>
-  </tr>
-  <tr>
-   <td>Codequiry API Key
-   </td>
-   <td>-key, -apikey
+   <td>Language of files
    </td>
    <td>No
    </td>
   </tr>
+  <tr>
+   <td>-d
+   </td>
+   <td>--directory
+   </td>
+   <td>Directory of student files
+   </td>
+   <td>No unless preceded by Git request
+   </td>
+  </tr>
+  <tr>
+   <td>
+   </td>
+   <td>--name
+   </td>
+   <td>Name of request
+   </td>
+   <td>Yes
+   </td>
+  </tr>
 </table>
 
-Note the difference between MOSS and Codequiry when submitting the student files: MOSS accepts entire directories distinguishing between different students implicitly based on directory structure so, the directory can be the root of **all** student files whereas Codequiry needs either A. a flat directory in which every immediate child file/directory represents a distinct student or B. a list of all directories that should be treated as distinct students
 
-All params that take a text file must be in the form of text file to a list of new line character separated relative or absolute directories. See \TestResources for valid examples.
+For Codequiry ensure that the directory passed corresponds to the immediate parent of all student files/directories. It will treat every subfolder and file as its own student. If you have a folder with 10 student folders and a readme.md it will treat it as having 11 students, with one named “readme”.
 
-The code can also be run via interactive mode which prompts the user for inputs. To run that simply include the large flags for each of the functions you want to run. i.e. --m --g to run Git and Moss. The interactive mode is blocking and only accepts from `System.in` making it not ideal for automation. Use command line arguments for that.
+The Directory flag is identical for Git, MOSS and Codequiry. It’s inclusion will set the directory for all the operations. Git will download to a temporary directory which MOSS and Codequiry operations will access.
+
+Likewise the language flag is identical for MOSS and Codequiry it’s inclusion will set the language for both operations.
 
 Examples of valid commands include:
 
---g -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" -b studentCode -b main --c -l java -apikey *codequiry_api_key*
+-g “ ” -u synewmark-resources -r "C:\Users\ahome\OneDrive\Desktop\Students.txt" --subdirectory StudentCode -b main -c *codequiry_api_key* -l java *codequiry_api_key*
 
---c -l java -apikey *codequiry_api_key* -sdf "C:\Users\ahome\OneDrive\Desktop\StudentDirectories.txt"
+--c -l java -apikey *codequiry_api_key* --directory "C:\Users\ahome\OneDrive\Desktop\StudentDirectories\"
 
---m -l java -apikey *MOSS API key* -sfd "C:\Users\ahome\OneDrive\Desktop\StudentFiles\
-
---g --m --c
+--moss *MOSS API key* --language java --directory "C:\Users\ahome\OneDrive\Desktop\StudentFiles\
