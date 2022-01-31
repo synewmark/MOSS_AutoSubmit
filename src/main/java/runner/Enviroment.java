@@ -80,7 +80,7 @@ public class Enviroment extends OptionsBase {
 
 		@Override
 		public char[] convert(String input) throws OptionsParsingException {
-			if (input == null) {
+			if (input == null || input.length() == 0) {
 				return null;
 			}
 			if (input.isBlank()) {
