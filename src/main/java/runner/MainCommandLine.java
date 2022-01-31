@@ -17,12 +17,16 @@ public class MainCommandLine {
 		parser.parseAndExitUponError(args);
 		enviroment = parser.getOptions(Enviroment.class);
 		System.out.println(Arrays.toString(enviroment.gitAPI));
-		if (enviroment.gitAPI != null) {
+		if (enviroment.gitAPI != null && enviroment.gitAPI.length > 0) {
 			gitRequest();
 		}
 
 		if (enviroment.mossID > -1) {
 			mossRequest();
+		}
+
+		if (enviroment.codequiryAPI != null && !enviroment.codequiryAPI.isBlank()) {
+			codequiryRequest();
 		}
 	}
 
@@ -53,20 +57,15 @@ public class MainCommandLine {
 		System.out.println();
 
 	}
-//
-//	private static void codequiryRequest() {
-//		System.out.println("Executing Codequiry request...");
-//		System.out.println();
-//		String resultsURL;
-//		if (codequiryRequest.length > 0) {
-//			resultsURL = new CodequiryRunner(codequiryRequest).execute().toString();
-//		} else {
-//			resultsURL = new CodequiryRunner().execute().toString();
-//		}
-//		System.out.println();
-//		System.out.println("Codequiry check creation+upload completed");
-//		System.out.println("You can finish execute your request at the following URL: " + resultsURL);
-//		System.out.println();
-//	}
 
+	private static void codequiryRequest() {
+		System.out.println("Executing Codequiry request...");
+		System.out.println();
+		String resultsURL;
+		resultsURL = new CodequiryRunner(enviroment).execute().toString();
+		System.out.println();
+		System.out.println("Codequiry check creation+upload completed");
+		System.out.println("You can finish execute your request at the following URL: " + resultsURL);
+		System.out.println();
+	}
 }

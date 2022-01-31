@@ -49,7 +49,7 @@ public class CodequiryRunner {
 
 	public URL execute() {
 		File[] filesToUpload = directoriesToUpload.listFiles();
-		if (name == null) {
+		if (name == null || name.isEmpty()) {
 			name = String.format("AutosubmitRequest: %s StudentCount: %d",
 					new Date(System.currentTimeMillis()).toString(), filesToUpload.length);
 		}
