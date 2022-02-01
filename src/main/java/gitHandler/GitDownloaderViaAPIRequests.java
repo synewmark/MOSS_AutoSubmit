@@ -166,6 +166,9 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 			}
 			JSONObject jsonObj = jsonArray.getJSONObject(0);
 			shaHash = jsonObj.getString("sha");
+			if (jsonArray.length() < 1) {
+				throw new IOException("No commits found before timestamp: " + date);
+			}
 		} catch (JSONException e) {
 			throw new IllegalStateException(
 					"Likely API change. Check https://docs.github.com/en/rest/reference/repos#commits", e);
