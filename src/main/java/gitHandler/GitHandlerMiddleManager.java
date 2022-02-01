@@ -38,8 +38,7 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 	}
 
 	private void cleanupDirectory() throws IOException {
-		File directoryToRepo = new File(directoryToDownloadTo,
-				this.urlToDownload.getUsername() + File.separator + this.urlToDownload.getRepoName());
+		File directoryToRepo = new File(directoryToDownloadTo, this.urlToDownload.getRepoName());
 
 		FileUtils.deleteDir(new File(directoryToRepo, ".git"));
 
@@ -58,8 +57,8 @@ public class GitHandlerMiddleManager extends GitHandlerAbstract {
 				set.add(fileToAdd);
 			}
 			FileFilter filter = (File file) -> !set.contains(file);
-			FileUtils.deleteDirExclude(new File(directoryToDownloadTo, urlToDownload.getUsername() + File.separator
-					+ urlToDownload.getRepoName() + File.separator + urlToDownload.getPath()), filter);
+			FileUtils.deleteDirExclude(new File(directoryToDownloadTo,
+					urlToDownload.getRepoName() + File.separator + urlToDownload.getPath()), filter);
 		}
 
 	}

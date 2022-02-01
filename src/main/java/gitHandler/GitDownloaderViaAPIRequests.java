@@ -44,8 +44,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 		if (dateToDownload == null) {
 			dateToDownload = LocalDateTime.now();
 		}
-		this.directoryToDownloadTo = new File(this.directoryToDownloadTo,
-				this.urlToDownload.getUsername() + File.separator + this.urlToDownload.getRepoName());
+		this.directoryToDownloadTo = new File(this.directoryToDownloadTo, this.urlToDownload.getRepoName());
 
 		if (explicitFilesToDownload != null) {
 			downloadGitWithDeclaredFiles(urlToDownload, dateToDownload, directoryToDownloadTo, oauthToken,
@@ -162,6 +161,9 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 		JSONTokener tokener = getJsonFromGitGet(url, oauthToken);
 		try {
 			JSONArray jsonArray = new JSONArray(tokener);
+			if (jsonArray.length() < 1) {
+				throw new IOException("No commits found before timestamp: " + date);
+			}
 			JSONObject jsonObj = jsonArray.getJSONObject(0);
 			shaHash = jsonObj.getString("sha");
 			if (jsonArray.length() < 1) {
@@ -209,7 +211,7 @@ public class GitDownloaderViaAPIRequests extends GitHandlerAbstract {
 		HttpURLConnection http;
 		http = (HttpURLConnection) url.openConnection();
 		http.setRequestProperty("Accept", "application/vnd.github.v3+json");
-		if (oauthToken != null) {
+		if (oauthToken != null && oauthToken.length > 0) {
 			// what's even the point of ensuring the token stays as a char array if I need
 			// to create a string to pass it as an HTTP property?!
 			// there should be a way to pass sensitive values as a bitstream which get
