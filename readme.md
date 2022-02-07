@@ -87,7 +87,7 @@
    </td>
    <td>--timestamp
    </td>
-   <td>Timestamp
+   <td>ISO 8601 compliant timestamp in format YYYY-MM-DDTHH:MM:SSZ
    </td>
    <td>Yes (Current time)
    </td>
