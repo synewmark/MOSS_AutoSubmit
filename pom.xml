@@ -83,9 +83,9 @@
 	        <plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-assembly-plugin</artifactId>
-			  <executions>
+			  <executions>	
 			    <execution>
-			      <id>create-my-bundle</id>
+			      <id>jar-with-dependencies</id>
 			      <phase>package</phase>
 			      <goals>
 			        <goal>single</goal>
@@ -99,9 +99,21 @@
 			        <descriptorRefs>
 			          <descriptorRef>jar-with-dependencies</descriptorRef>
 			        </descriptorRefs>
+					<finalName>AutoSubmit</finalName>
+     				<appendAssemblyId>false</appendAssemblyId>
 			      </configuration>
 			    </execution>
 			  </executions>
+			</plugin>
+			<plugin>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <version>3.0.2</version>
+			    <executions>
+			        <execution>
+			            <id>default-jar</id>
+			            <phase>none</phase>
+			        </execution>
+			    </executions>
 			</plugin>
 	    </plugins>
 	</build>
