@@ -4,7 +4,6 @@
   <artifactId>MOSS_AutoSubmit</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-
   <dependencies>
   
 	 <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -66,6 +65,7 @@
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+	<skipTests>true</skipTests>
 </properties>
 
 	<build>
@@ -74,6 +74,10 @@
 	            <groupId>org.apache.maven.plugins</groupId>       
 	            <artifactId>maven-surefire-plugin</artifactId>
 	            <version>3.0.0-M5</version>
+				<!-- Tests are disable by default - reenable at cl with -DskipTests=false #-->
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+				</configuration>
 	        </plugin>
 	        
 	        <plugin>
